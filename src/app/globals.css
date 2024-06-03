@@ -31,3 +31,44 @@ body {
     text-wrap: balance;
   }
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.pagination__item {
+  border-radius: 5px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #666;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s ease-in-out;
+  margin: 0 4px;
+}
+
+.pagination__item:hover {
+  background-color: #e1fbf2;
+  box-shadow: 1px 1px 3px #aaa;
+}
+
+.pagination__item--active {
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s ease-in-out;
+  margin: 0 4px;
+  background-color: rgb(210, 210, 210);
+  color: black;
+  font-weight: bold;
+}
