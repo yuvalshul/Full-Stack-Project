@@ -28,7 +28,7 @@ const HomePage = () => {
   }, [currentPage]);
   return (
     <div style={{ padding: '20px' }}>
-      <h1 className="mainHeadline" style={{ marginBottom: '6px' }}>Posts</h1>
+      <h1 className="mainHeadline" style={{ marginBottom: '6px' }}>Posts {numOfPages} {currentPage}</h1>
       {posts.map((post) => (
         <div key={post.id} style={{ marginBottom: '20px' }}>
           <span className="bullet">&#8226;</span>

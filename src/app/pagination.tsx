@@ -33,8 +33,8 @@ const Pagination: React.FC<Props> = (props) => {
                 {'<'}
             </button>
 
-            {Array.from({ length: currentPage <= 3 ? Math.min(5, pageCount) : Math.min(currentPage + 2, pageCount) - Math.max(currentPage - 2, 1) + 1 }, (_, i) => {
-              const pageNumber = Math.max(currentPage - 2, 1) + i;
+            {Array.from({ length: currentPage >= pageCount - 2 ? 5 :currentPage <= 3 ? Math.min(5, pageCount) : Math.min(currentPage + 2, pageCount) - Math.max(currentPage - 2, 1) + 1 }, (_, i) => {
+              let pageNumber =currentPage >= pageCount - 2 ? pageCount - 4 + i : Math.max(currentPage - 2, 1) + i;
               if (pageNumber > 0 && pageNumber <= pageCount) {
                 return (  
                   <button
@@ -48,7 +48,6 @@ const Pagination: React.FC<Props> = (props) => {
               } else {
                 return null;
               }
-            
             })}
 
             <button
