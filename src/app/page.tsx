@@ -9,6 +9,10 @@ const HomePage = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const[numOfPages, setNumOfPages] = useState<number>(1)
   const[currentPage, setCurrentPage] = useState<number>(1);
+  
+  function handleClick(i:number){
+    setCurrentPage(i);
+  }
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -24,7 +28,7 @@ const HomePage = () => {
   }, []);
   return (
     <div style={{ padding: '20px' }}>
-      <h1>Posts</h1>
+      <h1>Posts {currentPage}</h1>
       {posts.map((post) => (
         <div key={post.id} style={{ marginBottom: '20px' }}>
           <h2>{post.title}</h2>
@@ -32,7 +36,7 @@ const HomePage = () => {
           <p>{post.content}</p>
         </div>
       ))}
-      <Pagination page={currentPage} pageCount={numOfPages}></Pagination>
+      <Pagination currentPage={currentPage} pageCount={numOfPages} handle={(i: number) => handleClick(i)}></Pagination>
     </div>
   );
 };

@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import './globals.css';
 
 type Props = {
-    page: number;
+  currentPage: number;
     pageCount: number;
+    handle: (pageNumber: number) => void;
   };
 
 const Pagination: React.FC<Props> = (props) => {
-    const { page, pageCount } = props;
-    const [currentPage, setCurrentPage] = useState<number>(page);
+    const { currentPage, pageCount, handle} = props;
 
     return (
         <div className="pagination">
@@ -16,7 +16,7 @@ const Pagination: React.FC<Props> = (props) => {
                 key={'<<'}
                 className="pagination__item"
                 onClick={() => {
-                    setCurrentPage(1);
+                  handle(1);
                 } }
             >
                 {'<<'}
@@ -26,7 +26,7 @@ const Pagination: React.FC<Props> = (props) => {
                 className="pagination__item"
                 onClick={() => {
                     if (currentPage > 1) {
-                        setCurrentPage(currentPage - 1);
+                      handle(currentPage - 1);
                     }
                 } }
             >
@@ -39,7 +39,7 @@ const Pagination: React.FC<Props> = (props) => {
                 return (  
                   <button
                     key={pageNumber}
-                    onClick={() => setCurrentPage(pageNumber)}
+                    onClick={() => handle(pageNumber)}
                     className={pageNumber === currentPage ? 'pagination__item--active' : 'pagination__item'}
                   >
                     {pageNumber}
@@ -56,7 +56,7 @@ const Pagination: React.FC<Props> = (props) => {
                 className="pagination__item"
                 onClick={() => {
                     if (currentPage < pageCount) {
-                        setCurrentPage(currentPage + 1);
+                      handle(currentPage + 1);
                     }
                 } }
             >
@@ -66,7 +66,7 @@ const Pagination: React.FC<Props> = (props) => {
                 key={'>>'}
                 className="pagination__item"
                 onClick={() => {
-                    setCurrentPage(pageCount);
+                  handle(pageCount);
                 } }
             >
                 {'>>'}
