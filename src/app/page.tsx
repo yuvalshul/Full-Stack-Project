@@ -15,7 +15,7 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    const fetchPosts = async () => {
+      const fetchPosts = async () => {
       const response = await fetch('http://localhost:3001/notes');
       const data = await response.json();
       const startIndex = (currentPage - 1) * 10;
@@ -25,13 +25,14 @@ const HomePage = () => {
     };
 
     fetchPosts();
-  }, []);
+  }, [currentPage]);
   return (
     <div style={{ padding: '20px' }}>
-      <h1>Posts {currentPage}</h1>
+      <h1 className="mainHeadline" style={{ marginBottom: '6px' }}>Posts</h1>
       {posts.map((post) => (
         <div key={post.id} style={{ marginBottom: '20px' }}>
-          <h2>{post.title}</h2>
+          <span className="bullet">&#8226;</span>
+          <span className="headline">{post.title}</span>
           <p><strong>Author:</strong> {post.author.name} ({post.author.email})</p>
           <p>{post.content}</p>
         </div>

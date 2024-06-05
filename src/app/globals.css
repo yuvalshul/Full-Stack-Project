@@ -72,3 +72,29 @@ body {
   color: black;
   font-weight: bold;
 }
+
+.mainHeadline {
+  font-size: 23px;
+  font-weight: bold;
+  color: #333;
+  text-decoration: underline;
+  margin-left: -7px; /* Adjust the space from the left */
+}
+
+.headline {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  text-decoration: underline;
+  margin-left: 3px; /* Adjust the space from the left */
+}
+
+.bullet {
+  display: inline-block;
+  width: 10px; /* Adjust the width as needed */
+  margin-left: -10px; /* Adjust the space from the left */
+}
+
+.headline-text {
+  margin-left: 10px; /* Space between bullet and text */
+}
