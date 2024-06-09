@@ -7,22 +7,20 @@ type Props = {
     handle: (pageNumber: number) => void;
   };
 
-const Pagination: React.FC<Props> = (props) => {
-    const { currentPage, pageCount, handle} = props;
-
+const Pagination: React.FC<Props> = ({ currentPage, pageCount, handle }) => {
     return (
         <div className="pagination">
             <button
-                key={'<<'}
+                key={'First'}
                 className="pagination__item"
                 onClick={() => {
                   handle(1);
                 } }
             >
-                {'<<'}
+                {'First'}
             </button>
             <button
-                key={'<'}
+                key={'Prev'}
                 className="pagination__item"
                 onClick={() => {
                     if (currentPage > 1) {
@@ -30,11 +28,11 @@ const Pagination: React.FC<Props> = (props) => {
                     }
                 } }
             >
-                {'<'}
+                {'Prev'}
             </button>
 
-            {Array.from({ length: currentPage >= pageCount - 2 ? 5 :currentPage <= 3 ? Math.min(5, pageCount) : Math.min(currentPage + 2, pageCount) - Math.max(currentPage - 2, 1) + 1 }, (_, i) => {
-              let pageNumber =currentPage >= pageCount - 2 ? pageCount - 4 + i : Math.max(currentPage - 2, 1) + i;
+            {Array.from({ length: currentPage >= pageCount - 2 ? 5 :currentPage <= 3 ? Math.min(5, pageCount) : Math.min(currentPage + 2, pageCount) - Math.max(currentPage - 2, 1) + 1 as number}, (_, i) => {
+              let pageNumber: number = currentPage >= pageCount - 2 ? pageCount - 4 + i : Math.max(currentPage - 2, 1) + i;
               if (pageNumber > 0 && pageNumber <= pageCount) {
                 return (  
                   <button
@@ -51,7 +49,7 @@ const Pagination: React.FC<Props> = (props) => {
             })}
 
             <button
-                key={'>'}
+                key={'Next'}
                 className="pagination__item"
                 onClick={() => {
                     if (currentPage < pageCount) {
@@ -59,16 +57,16 @@ const Pagination: React.FC<Props> = (props) => {
                     }
                 } }
             >
-                {'>'}
+                {'Next'}
             </button>
             <button
-                key={'>>'}
+                key={'Last'}
                 className="pagination__item"
                 onClick={() => {
                   handle(pageCount);
                 } }
             >
-                {'>>'}
+                {'Last'}
             </button>
         </div>
   );
