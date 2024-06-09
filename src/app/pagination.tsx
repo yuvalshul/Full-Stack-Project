@@ -12,6 +12,7 @@ const Pagination: React.FC<Props> = ({ currentPage, pageCount, handle }) => {
         <div className="pagination">
             <button
                 key={'First'}
+                name="first"
                 className="pagination__item"
                 onClick={() => {
                   handle(1);
@@ -21,6 +22,7 @@ const Pagination: React.FC<Props> = ({ currentPage, pageCount, handle }) => {
             </button>
             <button
                 key={'Prev'}
+                name="previous"
                 className="pagination__item"
                 onClick={() => {
                     if (currentPage > 1) {
@@ -37,6 +39,7 @@ const Pagination: React.FC<Props> = ({ currentPage, pageCount, handle }) => {
                 return (  
                   <button
                     key={pageNumber}
+                    name={'page-'+pageNumber}
                     onClick={() => handle(pageNumber)}
                     className={pageNumber === currentPage ? 'pagination__item--active' : 'pagination__item'}
                   >
@@ -50,6 +53,7 @@ const Pagination: React.FC<Props> = ({ currentPage, pageCount, handle }) => {
 
             <button
                 key={'Next'}
+                name="next"
                 className="pagination__item"
                 onClick={() => {
                     if (currentPage < pageCount) {
@@ -61,6 +65,7 @@ const Pagination: React.FC<Props> = ({ currentPage, pageCount, handle }) => {
             </button>
             <button
                 key={'Last'}
+                name="last"
                 className="pagination__item"
                 onClick={() => {
                   handle(pageCount);
