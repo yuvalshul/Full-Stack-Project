@@ -37,7 +37,7 @@ return (
     <h1 className="mainHeadline" style={{ marginBottom: '6px' }}>Posts</h1>
     {posts.length > 0 ? (
       posts.map((post) => (
-        <Posts id={post.id} title={post.title} author={post.author} content={post.content}></Posts>
+        <Posts key={post.id} id={post.id} title={post.title} author={post.author} content={post.content}></Posts>
       ))
     ) : (
       <p>No posts to display.</p>
