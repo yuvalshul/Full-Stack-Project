@@ -12,7 +12,7 @@ export type Post = {
 
   const Posts: React.FC<Post> = ({id, title, author, content}) => {
     return(
-      <div  className="post" id={id.toString()} key={id} style={{ marginBottom: '20px' }}>
+      <div className="post" id={id.toString()} key={id} style={{ marginBottom: '20px' }}>
           <span className="bullet">&#8226;</span>
           <span className="headline">{title}</span>
           <p><strong>Author:</strong> {author.name} ({author.email})</p>
