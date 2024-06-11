@@ -10,22 +10,15 @@ export type Post = {
     content: string;
   }
 
-  const Post: React.FC<Post> = ({id, title, author, content}) => {
+  const Posts: React.FC<Post> = ({id, title, author, content}) => {
     return(
-      <div className="post" id={id.toString()}>
-        <h2>"id=:"{id}</h2>
-        <div>title=:{title}</div>
-        {author ? (
-        <>
-          <div>author: {author.name}</div>
-          <div>author email: {author.email}</div>
-        </>
-      ) : (
-        <div>author: Unknown</div>
-      )}
-        <div>content=:{content}</div>
+      <div  className="post" id={id.toString()} key={id} style={{ marginBottom: '20px' }}>
+          <span className="bullet">&#8226;</span>
+          <span className="headline">{title}</span>
+          <p><strong>Author:</strong> {author.name} ({author.email})</p>
+          <p>{content}</p>
       </div>
     );  
   }
 
-  export default Post;
+  export default Posts;

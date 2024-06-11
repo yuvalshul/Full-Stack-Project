@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 import type { Post } from './Posts';
+import Posts from './Posts';
 import Pagination from './pagination';
 
 const HomePage = () => {
@@ -36,12 +37,7 @@ return (
     <h1 className="mainHeadline" style={{ marginBottom: '6px' }}>Posts</h1>
     {posts.length > 0 ? (
       posts.map((post) => (
-        <div key={post.id} style={{ marginBottom: '20px' }}>
-          <span className="bullet">&#8226;</span>
-          <span className="headline">{post.title}</span>
-          <p><strong>Author:</strong> {post.author.name} ({post.author.email})</p>
-          <p>{post.content}</p>
-        </div>
+        <Posts id={post.id} title={post.title} author={post.author} content={post.content}></Posts>
       ))
     ) : (
       <p>No posts to display.</p>
