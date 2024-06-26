@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Note = require('./models/note');
+const Note = require('../models/note');
 
 // GET all notes
 router.get('/', async (req, res) => {
@@ -11,6 +11,7 @@ router.get('/', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+
 
 // GET a specific note by id
 router.get('/:id', getNote, (req, res) => {

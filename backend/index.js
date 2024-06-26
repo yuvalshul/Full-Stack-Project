@@ -6,9 +6,6 @@ const notesRouter = require('./routes/notes');
 
 const Note = require('./models/note')
 
-let notes = [
-]
-
 app.use(express.static('dist'))
 
 app.use(express.json())
@@ -34,40 +31,58 @@ app.post('/api/notes', (request, response) => {
       error: 'content missing' 
     })
   }
-
    const note = {
     title: body.title,
     author: body.author,
     content: body.content,
-    id: generateId(),
    }
-
-  notes = notes.concat(note)
-
-  response.json(note)
+   note.save()
+   .then(savedNote => {
+     response.json(savedNote)
+   })
+   .catch(error => next(error))
 })
 
 app.get('/api/notes', (req, res) => {
-  res.json(notes)
+  Note.find({}).then(notes => {
+    res.json(notes)
+  })
 })
 
 app.delete('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  notes = notes.filter(note => note.id !== id)
-
-  response.status(204).end()
+  Note.findByIdAndRemove(request.params.id)
+    .then(() => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 app.get('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const note = notes.find(note => note.id === id)
-
-  if (note) {
-    response.json(note)
-  } else {
-    response.status(404).end()
-  }
+  Note.findById(request.params.id)
+  .then(note => {
+    if (note) {
+      response.json(note)
+    } else {
+      response.status(404).end()
+    }
+  })
+  .catch(error => next(error))
 })
+
+app.put('/api/notes/:id', (request, response) => {
+  const { content, important } = request.body
+
+  Note.findByIdAndUpdate(
+    request.params.id,
+    { content, important },
+    { new: true, runValidators: true, context: 'query' }
+  )
+    .then(updatedNote => {
+      response.json(updatedNote)
+    })
+    .catch(error => next(error))
+})
+
 
 const dbURI = process.env.MONGODB_URL;
 mongoose.connect(dbURI, {
