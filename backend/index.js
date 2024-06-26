@@ -28,14 +28,15 @@ app.post('/api/notes', (request, response) => {
 
   if (!body.content) {
     return response.status(400).json({ 
-      error: 'content missing' 
+      error: 'content is missing' 
     })
   }
-   const note = {
+   const note = new Note({
     title: body.title,
     author: body.author,
     content: body.content,
-   }
+   })
+
    note.save()
    .then(savedNote => {
      response.json(savedNote)
@@ -50,8 +51,10 @@ app.get('/api/notes', (req, res) => {
 })
 
 app.delete('/api/notes/:id', (request, response) => {
-  Note.findByIdAndRemove(request.params.id)
+  console.log(request.params.id)
+  Note.findByIdAndDelete(request.params.id)
     .then(() => {
+      
       response.status(204).end()
     })
     .catch(error => next(error))

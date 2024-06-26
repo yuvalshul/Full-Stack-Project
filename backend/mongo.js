@@ -27,10 +27,17 @@ const noteSchema = new mongoose.Schema({
 const Note = mongoose.model('Note', noteSchema)
 
 const note = new Note({
-  title: 'note4',
+  title: 'note3',
   author: null,
-  content: 'HTML is easy',
+  content: 'HTML is easy3',
 })
+
+/*
+note.save().then(result => {
+  console.log('note saved!')
+  mongoose.connection.close()
+})
+
 
 Note.find({content: 'HTML is easy'}).then(result => {
   result.forEach(note => {
@@ -38,3 +45,34 @@ Note.find({content: 'HTML is easy'}).then(result => {
   })
   mongoose.connection.close()
 })
+  */
+
+// Function to create and save a new note
+const createAndSaveNote = async (id) => {
+  const note = new Note({
+    id: id,
+    title: `Note ${id}`,
+    author: {
+      name: `Author ${id}`,
+      email: `author${id}@example.com`
+    },
+    content: `HTML is easy ${id}`
+  });
+
+  try {
+    const savedNote = await note.save();
+    console.log(`Note ${savedNote.id} saved!`);
+  } catch (error) {
+    console.error('Error saving note:', error);
+  }
+};
+
+// Loop to create and save notes with indices from 1 to 20
+const createNotes = async () => {
+  for (let i = 4; i <= 20; i++) {
+    await createAndSaveNote(i);
+  }
+  mongoose.connection.close();
+};
+
+createNotes();
