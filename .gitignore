@@ -38,3 +38,6 @@ next-env.d.ts
 # Ignore node_modules and .next directories in frontend directory
 frontend/node_modules/
 frontend/.next/
+
+# Ignore node_modules in backend directory
+backend/node_modules/
