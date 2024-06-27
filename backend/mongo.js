@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+require('dotenv').config()
 
 if (process.argv.length<3) {
   console.log('give password as argument')
@@ -7,15 +8,16 @@ if (process.argv.length<3) {
 
 const password = process.argv[2]
 
-const url =
-    'mongodb+srv://yuval:HW2@cluster0.qlmyydw.mongodb.net/notes?retryWrites=true&w=majority&appName=Cluster0'
+const url = process.env.MONGODB_CONNECTION_URL
+
+console.log(url)
 
 mongoose.set('strictQuery',false)
 
 mongoose.connect(url)
 
 const noteSchema = new mongoose.Schema({
-    id: Number,
+    noteNumber: Number,
     title: String,
     author: {
     name: String,
@@ -26,13 +28,29 @@ const noteSchema = new mongoose.Schema({
 
 const Note = mongoose.model('Note', noteSchema)
 
+/*
+const deleteAllDocuments = async () => {
+  try {
+    const result = await Note.deleteMany({});
+    console.log(`${result.deletedCount} documents were deleted.`);
+  } catch (error) {
+    console.error('Error deleting documents:', error);
+  } finally {
+    mongoose.connection.close();
+  }
+};
+
+deleteAllDocuments();
+
+
+
 const note = new Note({
   title: 'note3',
   author: null,
   content: 'HTML is easy3',
 })
 
-/*
+
 note.save().then(result => {
   console.log('note saved!')
   mongoose.connection.close()
@@ -44,13 +62,13 @@ Note.find({content: 'HTML is easy'}).then(result => {
     console.log(note)
   })
   mongoose.connection.close()
-})
-  */
+})*/
+  
 
 // Function to create and save a new note
 const createAndSaveNote = async (id) => {
   const note = new Note({
-    id: id,
+    noteNumber: id,
     title: `Note ${id}`,
     author: {
       name: `Author ${id}`,
@@ -61,7 +79,7 @@ const createAndSaveNote = async (id) => {
 
   try {
     const savedNote = await note.save();
-    console.log(`Note ${savedNote.id} saved!`);
+    console.log(`Note ${savedNote.noteNumber} saved!`);
   } catch (error) {
     console.error('Error saving note:', error);
   }
@@ -69,7 +87,7 @@ const createAndSaveNote = async (id) => {
 
 // Loop to create and save notes with indices from 1 to 20
 const createNotes = async () => {
-  for (let i = 4; i <= 20; i++) {
+  for (let i = 1; i <= 54; i++) {
     await createAndSaveNote(i);
   }
   mongoose.connection.close();

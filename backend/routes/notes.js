@@ -1,77 +1,105 @@
 const express = require('express');
 const router = express.Router();
 const Note = require('../models/note');
+//const { generateId } = require('../index');
 
 // GET all notes
-router.get('/', async (req, res) => {
-    try {
-        const notes = await Note.find();
-        res.json(notes);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
+router.get('/', (req, res) => {
+  const currentPage = parseInt(req.query._page) || 1;
+  const perPage = parseInt(req.query._per_page) || 10;
+    Note.find({})
+    .skip((currentPage - 1) * perPage)
+    .limit(perPage)
+    .then(notes => {
+      Note.countDocuments()
+          .then(count => {
+            res.json({ notes, count });
+          })
+          .catch(error => {
+            throw error; // Pass the error to the next error handler
+          });
+      })
+    .catch (err => res.status(500).json({ message: err.message }))
 });
-
 
 // GET a specific note by id
-router.get('/:id', getNote, (req, res) => {
-    res.json(res.note);
+router.get('/:id', (req, res) => {
+  Note.findOneAndDelete({ noteNumber: parseInt(req.params.id) })
+    .then(note => {
+      if (!note) {
+        return res.status(404).json({ error: 'Note not found' });
+      }
+      res.json(note);
+    })
+    .catch(err => res.status(500).json({ message: err.message }))
 });
+
+
+// Function to generate new noteNumber based on the last document in the collection
+const generateId = () => {
+  return Note.findOne().sort({ noteNumber: -1 }).exec()
+    .then(lastNote => {
+      if (lastNote) {
+        return lastNote.noteNumber + 1;
+      } else {
+        return 1; // If no notes exist yet, start from 1
+      }
+    })
+    .catch(error => {
+      console.error('Failed to generate note number:', error);
+      throw error;
+    });
+};
+
 
 // POST a new note
-router.post('/', async (req, res) => {
+router.post('/', (req, res) => {
+  generateId()
+  .then(noteNumber => {
+    const { title, author, content } = req.body;
+    if (!content) {
+      return res.status(400).json({ error: 'Content is missing' });
+    }
     const note = new Note({
-        content: req.body.content,
-        important: req.body.important
+      noteNumber,
+      title,
+      author,
+      content
     });
 
-    try {
-        const newNote = await note.save();
-        res.status(201).json(newNote);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-});
+    return note.save();
+  })
+  .then(savedNote => res.json(savedNote))
+  .catch(err => res.status(500).json({ message: err.message }))
+  });
 
 // PUT update a note by id
-router.put('/:id', getNote, async (req, res) => {
-    if (req.body.content != null) {
-        res.note.content = req.body.content;
-    }
-    if (req.body.important != null) {
-        res.note.important = req.body.important;
-    }
-    try {
-        const updatedNote = await res.note.save();
+router.put('/:id', (req, res) => {
+    const { content } = req.body;
+    Note.findOneAndUpdate(
+      { noteNumber: req.params.id },
+      { content },
+      { new: true, runValidators: true }
+    )
+      .then(updatedNote => {
+        if (!updatedNote) {
+          return res.status(404).json({ error: 'Note not found' });
+        }
         res.json(updatedNote);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-});
+      })
+      .catch(err => res.status(500).json({ message: err.message }))
+  });
 
 // DELETE a note by id
-router.delete('/:id', getNote, async (req, res) => {
-    try {
-        await res.note.remove();
-        res.json({ message: 'Deleted note' });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
-
-async function getNote(req, res, next) {
-    let note;
-    try {
-        note = await Note.findById(req.params.id);
-        if (note == null) {
-            return res.status(404).json({ message: 'Cannot find note' });
+router.delete('/:id', (req, res) => {
+    Note.findOneAndDelete({ noteNumber: parseInt(req.params.id) })
+    .then(deletedNote => {
+        if (!deletedNote) {
+            return res.status(404).json({ error: 'Note not found' });
         }
-    } catch (err) {
-        return res.status(500).json({ message: err.message });
-    }
-
-    res.note = note;
-    next();
-}
+        res.status(204).end();
+    })
+    .catch(err => res.status(500).json({ message: err.message }))
+});
 
 module.exports = router;

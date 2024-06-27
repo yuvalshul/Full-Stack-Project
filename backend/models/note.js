@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
 
-const url = process.env.MONGODB_URL
+const url = process.env.MONGODB_CONNECTION_URL
 
 console.log('connecting to', url)
 mongoose.connect(url)
@@ -14,7 +14,7 @@ mongoose.connect(url)
   })
 
   const noteSchema = new mongoose.Schema({
-    id: Number,
+    noteNumber: Number,
     title: String,
     author: {
     name: String,
