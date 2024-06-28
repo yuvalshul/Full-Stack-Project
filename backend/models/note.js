@@ -14,7 +14,7 @@ mongoose.connect(url)
   })
 
   const noteSchema = new mongoose.Schema({
-    noteNumber: Number,
+    id: Number,
     title: String,
     author: {
     name: String,

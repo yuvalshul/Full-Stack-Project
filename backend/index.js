@@ -6,12 +6,14 @@ const fs = require('fs')
 const path = require('path')
 const cors = require('cors')
 
-const notesRouter = require('./routes/notes')
-
 const Note = require('./models/note')
+
+app.use(express.static('dist'))
 
 const logFilePath = path.join(__dirname, 'log.txt')
 
+
+//middleware logger function
 const requestLogger = (request, response, next) => {
   const logEntry = `
   Time:    ${new Date().toISOString()}
@@ -30,8 +32,14 @@ const requestLogger = (request, response, next) => {
 
   next();
 }
+/*
+const unknownEndpoint = (request, response) => {
+  console.log("unknownEndpoint")
+  response.status(404).send({ error: 'unknown endpoint' })
+}
 
-//app.use(express.static('dist'))
+app.use(unknownEndpoint)
+*/
 
 app.use(express.json())
 
@@ -39,95 +47,104 @@ app.use(cors())
 
 app.use(requestLogger)
 
-app.use('/notes', notesRouter);
-
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>')
-})
-
 //GET all notes
-app.get('/notes', (req, res) => {
+app.get('/notes', (req, response) => {
   const currentPage = parseInt(req.query._page) || 1;
   const perPage = parseInt(req.query._per_page) || 10;
-  Note.find({}).skip((currentPage - 1) * perPage).limit(perPage).then(notes => {
+  Note.find({}).skip((currentPage - 1) * perPage).limit(perPage)
+  .then(notes => {
     Note.countDocuments()
         .then(count => {
-          res.json({ notes, count });
+          response.status(200).json({ notes, count });
         })
-        .catch(error => {
-          throw error; // Pass the error to the next error handler
-        });
+        .catch (error => response.status(500).json({ error }));
     })
-    .catch(error => {
-      next(error); // Pass the error to Express error handling middleware
-    })
-})
-
-//POST
-app.post('/notes', (request, response) => {
-  console.log("post")
-  generateId()
-    .then(noteNumber => {
-      const body = request.body
-      if (!body.content) {
-        return response.status(400).json({ 
-          error: 'content is missing' 
-        })
-      }
-      const note = new Note({
-        noteNumber: noteNumber,
-        title: body.title,
-        author: {name: body.author.name, email: body.author.email} || { name: '', email: '' },
-        content: body.content,
-      })
-
-      return note.save();
-    })
-      .then(savedNote => {
-        response.json(savedNote)
-      })
-      .catch(error => next(error))
-})
-
-//DELETE note by id
-app.delete('/notes/:id', (request, response) => {
-  Note.findOneAndDelete({ noteNumber: parseInt(request.params.id) })
-    .then(() => {
-      console.log("note" + request.params.id + "was deleted successfully")
-      response.status(204).end()
-    })
-    .catch(error => next(error))
+    .catch (error => response.status(500).json({ error }));
 })
 
 //GET note by id
 app.get('/notes/:id', (request, response) => {
-  Note.findOneAndDelete({ noteNumber: parseInt(request.params.id) })
+  Note.findOneAndDelete({ id: parseInt(request.params.id) })
   .then(note => {
-    if (note) {
-      response.json(note)
-    } else {
-      response.status(404).end()
-    }
+    if (!note)
+      return (response.status(404).json({ error }));
+    else
+      response.status(200).json(note)
   })
-  .catch(error => next(error))
+  .catch (error => response.status(404).json({ error }));
+})
+
+// Function to generate new id based on the last document in the collection
+const generateId = () => {
+  return Note.findOne().sort({ id: -1 }).exec()
+    .then(lastNote => {
+      if (lastNote) {
+        return lastNote.id + 1;
+      } else {
+        return 1; // If no notes exist yet, start from 1
+      }
+    })
+    .catch (error => response.status(500).json({ error }));
+};
+
+//POST
+app.post('/notes', (request, response) => {
+  generateId()
+    .then(id => {
+      const body = request.body
+      if (!body.content) {
+        return response.status(400).json({ error })
+      }
+      const note = new Note({
+        id: id,
+        title: body.title,
+        author: {name: body.author.name, email: body.author.email} || { name: '', email: '' },
+        content: body.content,
+      })
+      return note.save();
+    })
+      .then(savedNote => {
+        response.status(200).json(savedNote)
+      })
+      .catch (error => response.status(500).json({ error }));
+})
+
+//DELETE note by id
+app.delete('/notes/:id', (request, response) => {
+  Note.find({}).skip((parseInt(request.params.id)) - 1).exec()
+  .then(notes => {
+    if (!notes) {
+      return (response.status(500).json({ error }))
+    }
+    return Note.findByIdAndDelete(notes[0]._id);
+  })
+  .then(() => {
+    response.status(204).end();
+  })
+  .catch (error => response.status(404).json({ error }));
 })
 
 //PUT (upadte)
 app.put('/notes/:id', (request, response) => {
   const { content } = request.body;
-
-  Note.findOneAndUpdate(
-    { noteNumber: request.params.id },
-    { content },
-    { new: true, runValidators: true, context: 'query' }
-  )
-    .then(updatedNote => {
-      if (!updatedNote) {
-        return response.status(404).json({ error: 'Note not found' });
-      }
-      response.json(updatedNote);
-    })
-    .catch(error => console.log(error))
+  Note.find({}).skip((parseInt(request.params.id)) - 1).exec()
+  .then(notes => {
+    if (!notes) {
+      return response.status(404).json({ error })
+    }
+    return Note.findOneAndUpdate(
+      { _id: notes[0]._id },
+      { content },
+      { new: true, runValidators: true, context: 'query' }
+    );
+  })
+  .then(updatedNote => {
+    if (!updatedNote) {
+      return response.status(500).json({ error });
+    }
+    response.status(201).json(updatedNote);
+  })
+  .catch (error => response.status(404).json({ error }));
 })
 
 

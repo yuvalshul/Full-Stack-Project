@@ -17,7 +17,7 @@ mongoose.set('strictQuery',false)
 mongoose.connect(url)
 
 const noteSchema = new mongoose.Schema({
-    noteNumber: Number,
+    id: Number,
     title: String,
     author: {
     name: String,
@@ -44,31 +44,18 @@ deleteAllDocuments();
 
 
 
-const note = new Note({
-  title: 'note3',
-  author: null,
-  content: 'HTML is easy3',
-})
-
-
-note.save().then(result => {
-  console.log('note saved!')
-  mongoose.connection.close()
-})
-
-
 Note.find({content: 'HTML is easy'}).then(result => {
   result.forEach(note => {
     console.log(note)
   })
   mongoose.connection.close()
-})*/
-  
+})
+  */
 
 // Function to create and save a new note
 const createAndSaveNote = async (id) => {
   const note = new Note({
-    noteNumber: id,
+    id: id,
     title: `Note ${id}`,
     author: {
       name: `Author ${id}`,
@@ -79,7 +66,7 @@ const createAndSaveNote = async (id) => {
 
   try {
     const savedNote = await note.save();
-    console.log(`Note ${savedNote.noteNumber} saved!`);
+    console.log(`Note ${savedNote.id} saved!`);
   } catch (error) {
     console.error('Error saving note:', error);
   }
