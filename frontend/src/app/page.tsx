@@ -16,7 +16,7 @@ const HomePage = () => {
   const [newAuthorName, setNewAuthorName] = useState<string>('');
   const [newAuthorEmail, setNewAuthorEmail] = useState<string>('');
   const [newNoteContent, setNewNoteContent] = useState<string>('');
-  const [theme, setTheme] = useState<string>('white');
+  const [theme, setTheme] = useState<string>('black');
   const [isAdding, setIsAdding] = useState(false);
   
   const handleClick = (i: number): void =>{
