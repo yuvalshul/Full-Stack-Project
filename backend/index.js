@@ -8,8 +8,6 @@ const cors = require('cors')
 
 const Note = require('./models/note')
 
-app.use(express.static('dist'))
-
 const logFilePath = path.join(__dirname, 'log.txt')
 
 
@@ -32,20 +30,18 @@ const requestLogger = (request, response, next) => {
 
   next();
 }
-/*
-const unknownEndpoint = (request, response) => {
-  console.log("unknownEndpoint")
-  response.status(404).send({ error: 'unknown endpoint' })
-}
-
-app.use(unknownEndpoint)
-*/
 
 app.use(express.json())
 
 app.use(cors())
 
 app.use(requestLogger)
+
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
 
 //GET all notes
 app.get('/notes', (req, response) => {
@@ -64,7 +60,7 @@ app.get('/notes', (req, response) => {
 
 //GET note by id
 app.get('/notes/:id', (request, response) => {
-  Note.findOneAndDelete({ id: parseInt(request.params.id) })
+  Note.find({}).skip((parseInt(request.params.id)) - 1).exec()
   .then(note => {
     if (!note)
       return (response.status(404).json({ error }));
@@ -147,6 +143,8 @@ app.put('/notes/:id', (request, response) => {
   .catch (error => response.status(404).json({ error }));
 })
 
+app.use(unknownEndpoint)
+
 
 mongoose.connect(process.env.MONGODB_CONNECTION_URL, {
     useNewUrlParser: true,
@@ -155,7 +153,7 @@ mongoose.connect(process.env.MONGODB_CONNECTION_URL, {
     useCreateIndex: true
 }).then(() => {
     console.log('MongoDB connected');
-    const PORT = process.env.PORT;
+    const PORT = 3001;
     app.listen(process.env.PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });
