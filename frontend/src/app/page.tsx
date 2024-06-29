@@ -100,13 +100,16 @@ const handleThemeChange = () => {
   setTheme(newTheme);
 };
 
-
 const handleAddNote = () => {
   setIsAdding (true);
 };
 
 const handleCancelClick = () => {
   //setEditContent(content);
+  setNewNoteTitle('');
+  setNewAuthorName('');
+  setNewAuthorEmail('');
+  setNewNoteContent('');
   setIsAdding(false);
 };
 
@@ -127,6 +130,7 @@ const handleSaveClick = () => {
       setNewAuthorEmail('');
       setNewNoteContent('');
       setNumOfNotes(numOfNotes + 1);
+      setIsAdding(false);
     })
     .catch(error => {
       console.error('Error adding note:', error);

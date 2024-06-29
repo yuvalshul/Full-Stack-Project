@@ -8,10 +8,7 @@ const cors = require('cors')
 
 const Note = require('./models/note')
 
-app.use(express.static('dist'))
-
 const logFilePath = path.join(__dirname, 'log.txt')
-
 
 //middleware logger function
 const requestLogger = (request, response, next) => {
@@ -32,14 +29,11 @@ const requestLogger = (request, response, next) => {
 
   next();
 }
-/*
+
 const unknownEndpoint = (request, response) => {
   console.log("unknownEndpoint")
   response.status(404).send({ error: 'unknown endpoint' })
 }
-
-app.use(unknownEndpoint)
-*/
 
 app.use(express.json())
 
@@ -147,6 +141,7 @@ app.put('/notes/:id', (request, response) => {
   .catch (error => response.status(404).json({ error }));
 })
 
+app.use(unknownEndpoint)
 
 mongoose.connect(process.env.MONGODB_CONNECTION_URL, {
     useNewUrlParser: true,
