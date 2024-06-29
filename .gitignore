@@ -42,3 +42,4 @@ frontend/.next/
 # Ignore node_modules and log.txt in backend directory
 backend/node_modules/
 backend/log
+backend/.env
