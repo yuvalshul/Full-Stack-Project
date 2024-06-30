@@ -9,19 +9,14 @@ import Pagination from './pagination';
 
 const HomePage = () => {
   const [notes, setNotes] = useState<note[]>([]);
-  const[numOfPages, setNumOfPages] = useState<number>(1);
-  const[currentPage, setCurrentPage] = useState<number>(1);
-  const[numOfNotes, setNumOfNotes] = useState<number>(1);
+  const [numOfPages, setNumOfPages] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [newNoteTitle, setNewNoteTitle] = useState<string>('');
   const [newAuthorName, setNewAuthorName] = useState<string>('');
   const [newAuthorEmail, setNewAuthorEmail] = useState<string>('');
   const [newNoteContent, setNewNoteContent] = useState<string>('');
   const [theme, setTheme] = useState<string>('black');
   const [isAdding, setIsAdding] = useState(false);
-  
-  const handleClick = (i: number): void =>{
-    setCurrentPage(i);
-  };
 
   useEffect(() => {
     const promise = axios.get(`http://localhost:3001/notes`, {
@@ -29,26 +24,26 @@ const HomePage = () => {
         _page: currentPage,
         _per_page: 10,
       },
-    });
+    })
     promise
       .then((response) => {
-        const { data } = response; // Extract data from the response object
-        const { notes, count } = data; // Destructure notes and count from data
-        setNumOfNotes(count);
-        setNotes(notes);
-        setNumOfPages (Math.ceil(count / 10));
+        setNotes(response.data.notesRes);
+        const numOfNotes = (parseInt(response.data.count), 10);
+        setNumOfPages (Math.ceil(numOfNotes / 10));
       })
-      .catch(error => { console.log("Encountered an error:" + error)});
-  }, [currentPage, numOfNotes]);
+      .catch(error => { console.error("Encountered an error:" + error)});;
+  }, [currentPage]);
 
-const handleSave = (idDB: number, newContent: string) => {
+const handlePaginationClick = (i: number): void =>{
+  setCurrentPage(i);
+};
+
+const handleNoteSave = (idDB: number, newContent: string) => {
   const id = (currentPage - 1) * 10 + notes.findIndex(note => note.id === idDB) + 1;
-  console.log("1) node id to update: " + id)
   axios.put(`http://localhost:3001/notes/${id}`, {
     content: newContent
   })
   .then((response) => {
-    console.log("2) node id to update: " + id)
     setNotes(notes.map(note => note.id === idDB ? { ...note, content: newContent } : note
     ));
   })
@@ -58,17 +53,15 @@ const handleSave = (idDB: number, newContent: string) => {
 };
 
 
-const handleDelete = (idDB: number) => {
+const handleNoteDelete = (idDB: number) => {
   const inedx = notes.findIndex(note => note.id === idDB);
   const id = (currentPage - 1) * 10 + inedx + 1;
-  //console.log(id)
   axios.delete(`http://localhost:3001/notes/${id}`)
   .then((response) => {
     // Remove the note from the notes state if successful
     setNotes(notes => {
       const updatedNotes = [...notes];
       updatedNotes.splice(inedx, 1); // Remove the note at index id - 1
-      setNumOfNotes(numOfNotes - 1);
       if(updatedNotes.length == 0)
         setCurrentPage(currentPage - 1);
       return updatedNotes;
@@ -105,7 +98,6 @@ const handleAddNote = () => {
 };
 
 const handleCancelClick = () => {
-  //setEditContent(content);
   setNewNoteTitle('');
   setNewAuthorName('');
   setNewAuthorEmail('');
@@ -123,13 +115,11 @@ const handleSaveClick = () => {
     content: newNoteContent
   })
     .then((response) => {
-      console.log("Note added successfully:", response.data);
       setNotes([...notes, response.data]);
       setNewNoteTitle('');
       setNewAuthorName('');
       setNewAuthorEmail('');
       setNewNoteContent('');
-      setNumOfNotes(numOfNotes + 1);
       setIsAdding(false);
     })
     .catch(error => {
@@ -144,8 +134,8 @@ return (
       <button name="change_theme" onClick={handleThemeChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Change theme to {theme}</button>
     </div>
       {notes.map((note) => (
-        <div style={{ color: theme }}>
-        <Note key={note.id} id={note.id} title={note.title} author={note.author} content={note.content} theme={theme} onSave={handleSave} onDelete={handleDelete}></Note>
+        <div key={note.id} style={{ color: theme }}>
+        <Note key={note.id} id={note.id} title={note.title} author={note.author} content={note.content} theme={theme} onSave={handleNoteSave} onDelete={handleNoteDelete}></Note>
         </div>
       ))}
       <button name="add_new_note" onClick={handleAddNote} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Add Note</button>
@@ -164,7 +154,7 @@ return (
           <button name="text_input_cancel_new_note" onClick={handleCancelClick} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Cancel</button>
         </div>
       )}
-    <Pagination currentPage={currentPage} pageCount={numOfPages} handle={(i: number) => handleClick(i)}></Pagination>
+    <Pagination currentPage={currentPage} pageCount={numOfPages} handle={(i: number) => handlePaginationClick(i)}></Pagination>
   </div>
 );}
 

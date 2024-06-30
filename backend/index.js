@@ -46,15 +46,16 @@ app.get('/notes', (req, response) => {
   const currentPage = parseInt(req.query._page) || 1;
   const perPage = parseInt(req.query._per_page) || 10;
   Note.find({}).skip((currentPage - 1) * perPage).limit(perPage)
-  .then(notes => {
+  .then(notesRes => {
     Note.countDocuments()
         .then(count => {
-          response.status(200).json({ notes, count });
+          response.status(200).json({ notesRes, count });
         })
         .catch (error => response.status(500).json({ error }));
     })
     .catch (error => response.status(500).json({ error }));
 })
+
 
 //GET note by id
 app.get('/notes/:id', (request, response) => {
