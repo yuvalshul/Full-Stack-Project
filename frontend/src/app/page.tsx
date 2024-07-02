@@ -151,7 +151,7 @@ return (
           <br />
           <input type="text" placeholder="Enter author email..." value={newAuthorEmail} onChange={handleAuthorEmailChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
           <br />
-          <input type="text" placeholder="Enter note content..." value={newNoteContent} onChange={handleContentChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+          <input name="text_input_new_note" type="text" placeholder="Enter note content..." value={newNoteContent} onChange={handleContentChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
           <br />
           <button name="text_input_save_new_note" onClick={handleSaveClick} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Save</button>
           <button name="text_input_cancel_new_note" onClick={handleCancelClick} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Cancel</button>
