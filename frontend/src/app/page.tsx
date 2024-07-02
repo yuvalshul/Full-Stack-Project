@@ -7,10 +7,11 @@ import type { note } from './Note';
 import Note from './Note';
 import Pagination from './pagination';
 
-const HomePage = () => {
+export default function HomePage () {
   const [notes, setNotes] = useState<note[]>([]);
   const [numOfPages, setNumOfPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [numOfNotes, setNumOfNotes] = useState<number>(1);
   const [newNoteTitle, setNewNoteTitle] = useState<string>('');
   const [newAuthorName, setNewAuthorName] = useState<string>('');
   const [newAuthorEmail, setNewAuthorEmail] = useState<string>('');
@@ -28,11 +29,11 @@ const HomePage = () => {
     promise
       .then((response) => {
         setNotes(response.data.notesRes);
-        const numOfNotes = (parseInt(response.data.count), 10);
+        setNumOfNotes(parseInt(response.data.count));
         setNumOfPages (Math.ceil(numOfNotes / 10));
       })
       .catch(error => { console.error("Encountered an error:" + error)});;
-  }, [currentPage]);
+  }, [currentPage, numOfNotes]);
 
 const handlePaginationClick = (i: number): void =>{
   setCurrentPage(i);
@@ -62,6 +63,7 @@ const handleNoteDelete = (idDB: number) => {
     setNotes(notes => {
       const updatedNotes = [...notes];
       updatedNotes.splice(inedx, 1); // Remove the note at index id - 1
+      setNumOfNotes(numOfNotes - 1);
       if(updatedNotes.length == 0)
         setCurrentPage(currentPage - 1);
       return updatedNotes;
@@ -121,6 +123,7 @@ const handleSaveClick = () => {
       setNewAuthorEmail('');
       setNewNoteContent('');
       setIsAdding(false);
+      setNumOfNotes(numOfNotes + 1);
     })
     .catch(error => {
       console.error('Error adding note:', error);
@@ -158,4 +161,3 @@ return (
   </div>
 );}
 
-export default HomePage;
