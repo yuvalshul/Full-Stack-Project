@@ -7,7 +7,7 @@ import type { note } from './Note';
 import Note from './Note';
 import Pagination from './pagination';
 
-export default function HomePage () {
+export default function Page () {
   const [notes, setNotes] = useState<note[]>([]);
   const [numOfPages, setNumOfPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -131,6 +131,15 @@ const handleSaveClick = () => {
 };
 
 return (
+  /*<div>
+  <h1>page component</h1>
+  {notes.map((note) => (
+    <div key={note.id} style={{ color: theme }}>
+    <Note key={note.id} id={note.id} title={note.title} author={note.author} content={note.content} theme={theme} onSave={handleNoteSave} onDelete={handleNoteDelete}></Note>
+    </div>
+  ))}
+  </div>
+  */
   <div style={{ padding: '30px',minHeight: '100vh', margin: 0, backgroundColor: theme === 'white' ? 'black' : 'white'}}>
     <div style={{ display: 'flex', alignItems: 'center' }}>
     <h1 className="mainHeadline" style={{ marginBottom: '6px', color: theme }}>Notes</h1>

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import './globals.css';
 
 type Props = {
   currentPage: number;
-    pageCount: number;
-    handle: (pageNumber: number) => void;
-  };
+  pageCount: number;
+  handle: (pageNumber: number) => void;
+};
 
 const Pagination: React.FC<Props> = ({ currentPage, pageCount, handle }) => {
     return (
