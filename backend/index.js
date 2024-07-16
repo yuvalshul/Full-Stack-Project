@@ -5,6 +5,7 @@ const app = express()
 const fs = require('fs')
 const path = require('path')
 const cors = require('cors')
+const usersRouter = require('./controllers/users')
 
 const Note = require('./models/note')
 
@@ -40,6 +41,8 @@ app.use(express.json())
 app.use(cors())
 
 app.use(requestLogger)
+
+app.use('/api/users', usersRouter)
 
 //GET all notes
 app.get('/notes', (req, response) => {
