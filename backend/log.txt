@@ -3641,3 +3641,243 @@
   Body:    {}
   -----------
   
+  Time:    2024-07-16T16:11:26.991Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-16T16:11:27.181Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-16T16:11:45.687Z
+  Method:  GET
+  Path:    /api/users
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-16T16:11:45.783Z
+  Method:  GET
+  Path:    /favicon.ico
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-16T16:12:22.672Z
+  Method:  POST
+  Path:    /api/users/
+  Body:    {"username":"root","name":"Superuser","password":"salainen"}
+  -----------
+  
+  Time:    2024-07-16T16:12:26.103Z
+  Method:  GET
+  Path:    /api/users
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-16T16:13:53.548Z
+  Method:  GET
+  Path:    /api/users
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-16T16:16:16.880Z
+  Method:  GET
+  Path:    /api/users
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-16T16:26:01.043Z
+  Method:  GET
+  Path:    /api/users
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-16T16:26:24.638Z
+  Method:  POST
+  Path:    /api/users/
+  Body:    {"username":"YUVAL","name":"Yuval","password":"123456"}
+  -----------
+  
+  Time:    2024-07-16T16:26:27.266Z
+  Method:  GET
+  Path:    /api/users
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-16T16:27:20.181Z
+  Method:  POST
+  Path:    /api/users/
+  Body:    {"username":"YUVAL","name":"Yuval","password":"123456"}
+  -----------
+  
+  Time:    2024-07-16T16:28:53.021Z
+  Method:  GET
+  Path:    /api/users/
+  Body:    {"username":"YUVAL","name":"Yuval","password":"123456"}
+  -----------
+  
+  Time:    2024-07-16T17:40:17.816Z
+  Method:  GET
+  Path:    /api/users
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-16T17:41:10.619Z
+  Method:  GET
+  Path:    /api/users/
+  Body:    {"username":"YUVAL","name":"Yuval","password":"123456"}
+  -----------
+  
+  Time:    2024-07-16T17:41:14.353Z
+  Method:  GET
+  Path:    /api/users/
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:50:55.257Z
+  Method:  GET
+  Path:    /users/
+  Body:    {"username":"YUVAL","name":"Yuval","password":"123456"}
+  -----------
+  
+  Time:    2024-07-17T08:51:19.671Z
+  Method:  GET
+  Path:    /users/
+  Body:    {"username":"YUVAL","name":"Yuval","password":"123456"}
+  -----------
+  
+  Time:    2024-07-17T08:51:21.398Z
+  Method:  GET
+  Path:    /users/
+  Body:    {"username":"YUVAL","name":"Yuval","password":"123456"}
+  -----------
+  
+  Time:    2024-07-17T08:51:48.253Z
+  Method:  GET
+  Path:    /users/
+  Body:    {"username":"YUVAL","name":"Yuval","password":"123456"}
+  -----------
+  
+  Time:    2024-07-17T08:51:49.545Z
+  Method:  GET
+  Path:    /users/
+  Body:    {"username":"YUVAL","name":"Yuval","password":"123456"}
+  -----------
+  
+  Time:    2024-07-17T08:51:53.591Z
+  Method:  POST
+  Path:    /users/
+  Body:    {"username":"YUVAL","name":"Yuval","password":"123456"}
+  -----------
+  
+  Time:    2024-07-17T08:51:55.859Z
+  Method:  POST
+  Path:    /users/
+  Body:    {"username":"YUVAL","name":"Yuval","password":"123456"}
+  -----------
+  
+  Time:    2024-07-17T08:52:01.183Z
+  Method:  POST
+  Path:    /users/
+  Body:    {"username":"YUVAL","name":"Yuval","password":"123456"}
+  -----------
+  
+  Time:    2024-07-17T08:53:27.306Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:53:27.468Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:53:30.138Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:53:30.270Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:53:31.055Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:53:31.191Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:53:44.077Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:53:44.213Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:53:51.663Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:53:51.801Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:54:40.160Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:54:40.337Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:55:06.453Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:55:06.611Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:58:02.871Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-17T08:58:03.061Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  

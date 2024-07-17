@@ -169,26 +169,27 @@ return (
     <h1 className="mainHeadline" style={{ marginBottom: '6px', color: theme }}>Notes</h1>
       <button name="change_theme" onClick={handleThemeChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Change theme to {theme}</button>
     </div>
-    <form>
+    <form name="create_user_form">
     <h1 className="headline" style={{ color: theme }}>Create user</h1>
-    <input name="........." type="text" placeholder="Enter Name..." value={name} onChange={handleNameChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+    <input name="create_user_form_name" type="text" placeholder="Enter Name..." value={name} onChange={handleNameChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
     <br />
-    <input name="........." type="text" placeholder="Enter Email..." value={email} onChange={handleEmailChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+    <input name= "create_user_form_email" type="text" placeholder="Enter Email..." value={email} onChange={handleEmailChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
     <br />
-    <input name="........." type="text" placeholder="Enter user name..." value={createUserName} onChange={handleCreateUserNameChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+    <input name="create_user_form_username" type="text" placeholder="Enter user name..." value={createUserName} onChange={handleCreateUserNameChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
     <br />
-    <input name="........." type="text" placeholder="Enter password..." value={createPassword} onChange={handleCreatePasswordChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+    <input name="create_user_form_password" type="text" placeholder="Enter password..." value={createPassword} onChange={handleCreatePasswordChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
     <br />
-    <button name="........." onClick={()=>{}} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Create</button>
+    <button name= "create_user_form_create_user" onClick={()=>{}} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Create User</button>
     </form>
     <br />
-    <form>
+    <form name="login_form">
     <h1 className="headline" style={{ color: theme }}>Login</h1>
-    <input name="........." type="text" placeholder="Enter user name..." value={userName} onChange={handleUserNameChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+    <input name="login_form_username" type="text" placeholder="Enter user name..." value={userName} onChange={handleUserNameChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
     <br />
-    <input name="........." type="text" placeholder="Enter password..." value={password} onChange={handlePasswordChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+    <input name="login_form_password" type="text" placeholder="Enter password..." value={password} onChange={handlePasswordChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
     <br />
-    <button name="........." onClick={()=>{}} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Login</button>
+    <button name="login_form_login" onClick={()=>{}} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Login</button>
+    <button name="logout" onClick={()=>{}} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Logout</button>
     </form>
       {notes.map((note) => (
         <div key={note.id} style={{ color: theme }}>

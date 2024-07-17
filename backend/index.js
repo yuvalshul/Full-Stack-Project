@@ -5,8 +5,8 @@ const app = express()
 const fs = require('fs')
 const path = require('path')
 const cors = require('cors')
-const usersRouter = require('./controllers/users')
-
+const bcrypt = require('bcrypt')
+const User = require('./models/user')
 const Note = require('./models/note')
 
 const logFilePath = path.join(__dirname, 'log.txt')
@@ -42,7 +42,11 @@ app.use(cors())
 
 app.use(requestLogger)
 
-app.use('/api/users', usersRouter)
+
+
+
+
+//NOTES
 
 //GET all notes
 app.get('/notes', (req, response) => {
@@ -52,6 +56,7 @@ app.get('/notes', (req, response) => {
   .then(notesRes => {
     Note.countDocuments()
         .then(count => {
+          console.log({ notesRes, count });
           response.status(200).json({ notesRes, count });
         })
         .catch (error => response.status(500).json({ error }));
@@ -144,6 +149,41 @@ app.put('/notes/:id', (request, response) => {
   })
   .catch (error => response.status(404).json({ error }));
 })
+
+
+
+
+
+//USERS
+
+//Get all users
+app.get('/users', async (request, response) => {
+  const users = await User.find({})
+  response.json(users)
+})
+
+//Add a new user
+app.post('/users', async (request, response) => {
+  const { username, name, password } = request.body
+
+  const saltRounds = 10
+  const passwordHash = await bcrypt.hash(password, saltRounds)
+
+  const user = new User({
+    username,
+    name,
+    passwordHash,
+  })
+
+  const savedUser = await user.save()
+
+  response.status(201).json(savedUser)
+})
+
+
+
+
+
 
 app.use(unknownEndpoint)
 
