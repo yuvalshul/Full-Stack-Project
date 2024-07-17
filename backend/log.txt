@@ -3881,3 +3881,63 @@
   Body:    {}
   -----------
   
+  Time:    2024-07-17T09:14:39.338Z
+  Method:  POST
+  Path:    /notes/
+  Body:    {"id":1,"title":"Note 1","author":null,"content":"HTML is easy 1","userID":"6697863169301ef7816d6534"}
+  -----------
+  
+  Time:    2024-07-17T09:15:35.493Z
+  Method:  POST
+  Path:    /notes/
+  Body:    {"id":1,"title":"Note 1","author":{"name":"author 1","email":"authorEmail1"},"content":"HTML is easy 1","userID":"6697863169301ef7816d6534"}
+  -----------
+  
+  Time:    2024-07-17T09:16:23.698Z
+  Method:  POST
+  Path:    /notes/
+  Body:    {"id":1,"title":"Note 1","author":{"name":"author 1","email":"authorEmail1"},"content":"HTML is easy 1","userID":"6697863169301ef7816d6534"}
+  -----------
+  
+  Time:    2024-07-17T09:16:58.302Z
+  Method:  POST
+  Path:    /notes/
+  Body:    {"id":1,"title":"Note 1","author":{"name":"author 1","email":"authorEmail1"},"content":"HTML is easy 1","userID":"6697863169301ef7816d6534"}
+  -----------
+  
+  Time:    2024-07-17T09:17:05.262Z
+  Method:  POST
+  Path:    /notes/
+  Body:    {"id":1,"title":"Note 1","author":{"name":"author 1","email":"authorEmail1"},"content":"HTML is easy 1","userID":"6697863169301ef7816d6534"}
+  -----------
+  
+  Time:    2024-07-17T09:17:33.644Z
+  Method:  POST
+  Path:    /notes/
+  Body:    {"id":1,"title":"Note 1","author":{"name":"author 1","email":"authorEmail1"},"content":"HTML is easy 1","userId":"6697863169301ef7816d6534"}
+  -----------
+  
+  Time:    2024-07-17T09:18:24.821Z
+  Method:  POST
+  Path:    /notes/
+  Body:    {"id":1,"title":"Note 1","author":{"name":"author 1","email":"authorEmail1"},"content":"HTML is easy 1","userId":"6697863169301ef7816d6534"}
+  -----------
+  
+  Time:    2024-07-17T09:22:30.121Z
+  Method:  POST
+  Path:    /notes/
+  Body:    {"id":1,"title":"Note 1","author":{"name":"author 1","email":"authorEmail1"},"content":"HTML is easy 1","userId":"6697863169301ef7816d6534"}
+  -----------
+  
+  Time:    2024-07-17T09:24:45.206Z
+  Method:  POST
+  Path:    /notes/
+  Body:    {"id":1,"title":"Note 1","author":{"name":"author 1","email":"authorEmail1"},"content":"HTML is easy 1","userId":"6697863169301ef7816d6534"}
+  -----------
+  
+  Time:    2024-07-17T09:26:33.403Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  

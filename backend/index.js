@@ -92,25 +92,42 @@ const generateId = () => {
 
 //POST
 app.post('/notes', (request, response) => {
+  const body = request.body;
+
+  if (!body.content) {
+    return response.status(400).json({ error: 'Content missing' });
+  }
+
   generateId()
     .then(id => {
-      const body = request.body
-      if (!body.content) {
-        return response.status(400).json({ error })
-      }
-      const note = new Note({
-        id: id,
-        title: body.title,
-        author: {name: body.author.name, email: body.author.email} || { name: '', email: '' },
-        content: body.content,
-      })
-      return note.save();
+      return User.findById(body.userId)
+        .then(user => {
+          if (!user) {
+            throw new Error('User not found');
+          }
+          const note = new Note({
+            id: id,
+            title: body.title,
+            author: {
+              name: body.author ? body.author.name : '',
+              email: body.author ? body.author.email : ''
+            },
+            content: body.content,
+            user: user._id
+          });
+          return note.save()
+            .then(savedNote => {
+              user.notes = user.notes.concat(savedNote._id);
+              return user.save()
+                .then(() => savedNote); // Ensure savedNote is returned
+            });
+        });
     })
-      .then(savedNote => {
-        response.status(200).json(savedNote)
-      })
+    .then(savedNote => {
+      response.status(201).json(savedNote);
+    })
       .catch (error => response.status(500).json({ error }));
-})
+});
 
 //DELETE note by id
 app.delete('/notes/:id', (request, response) => {
