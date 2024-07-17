@@ -3941,3 +3941,51 @@
   Body:    {}
   -----------
   
+  Time:    2024-07-17T09:59:31.493Z
+  Method:  POST
+  Path:    /login/
+  Body:    {"username":"mluukkai","password":"salainen"}
+  -----------
+  
+  Time:    2024-07-17T10:01:45.026Z
+  Method:  POST
+  Path:    /users/
+  Body:    {"username":"Alina","name":"Alinda Dronov","password":"1234","notes":{}}
+  -----------
+  
+  Time:    2024-07-17T10:05:39.856Z
+  Method:  POST
+  Path:    /users/
+  Body:    {"name":"Alinda Dronov","email":"alina@gmail.com","username":"Alina","password":"1234","notes":{}}
+  -----------
+  
+  Time:    2024-07-17T10:06:47.528Z
+  Method:  POST
+  Path:    /login/
+  Body:    {"username":"Alina","password":"1234"}
+  -----------
+  
+  Time:    2024-07-17T10:07:46.222Z
+  Method:  POST
+  Path:    /login/
+  Body:    {"username":"Alina","password":"134"}
+  -----------
+  
+  Time:    2024-07-17T10:07:50.509Z
+  Method:  POST
+  Path:    /login/
+  Body:    {"username":"Alna","password":"1234"}
+  -----------
+  
+  Time:    2024-07-17T10:07:53.048Z
+  Method:  POST
+  Path:    /login/
+  Body:    {"username":"Alina","password":"1234"}
+  -----------
+  
+  Time:    2024-07-17T10:08:00.232Z
+  Method:  POST
+  Path:    /login/
+  Body:    {"username":"Alina","password":"1234"}
+  -----------
+  
