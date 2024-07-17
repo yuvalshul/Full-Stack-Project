@@ -57,7 +57,6 @@ app.get('/notes', (req, response) => {
   .then(notesRes => {
     Note.countDocuments()
         .then(count => {
-          console.log({ notesRes, count });
           response.status(200).json({ notesRes, count });
         })
         .catch (error => response.status(500).json({ error }));
@@ -91,17 +90,29 @@ const generateId = () => {
     .catch (error => response.status(500).json({ error }));
 };
 
+//Get a token
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '')
+  }
+  return null
+}
+
+
 //POST
 app.post('/notes', (request, response) => {
   const body = request.body;
-
   if (!body.content) {
     return response.status(400).json({ error: 'Content missing' });
   }
-
   generateId()
     .then(id => {
-      return User.findById(body.userId)
+      const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+      if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' })
+      }
+      return User.findById(decodedToken.id)
         .then(user => {
           if (!user) {
             throw new Error('User not found');
@@ -132,13 +143,21 @@ app.post('/notes', (request, response) => {
 
 //DELETE note by id
 app.delete('/notes/:id', (request, response) => {
-  Note.find({}).skip((parseInt(request.params.id)) - 1).exec()
-  .then(notes => {
-    if (!notes) {
-      return (response.status(500).json({ error }))
-    }
-    return Note.findByIdAndDelete(notes[0]._id);
-  })
+  //console.log("request:" , request)
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+      if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' })
+      }
+      return User.findById(decodedToken.id)
+      .then(user => {
+          Note.find({}).skip((parseInt(request.params.id)) - 1).exec()
+          .then(notes => {
+            if (!notes || !notes[0].user.equals(user._id)) {
+              return (response.status(500).json({ error}))
+            }
+            return Note.findByIdAndDelete(notes[0]._id);
+          })
+        })
   .then(() => {
     response.status(204).end();
   })
@@ -148,23 +167,32 @@ app.delete('/notes/:id', (request, response) => {
 //PUT (upadte)
 app.put('/notes/:id', (request, response) => {
   const { content } = request.body;
-  Note.find({}).skip((parseInt(request.params.id)) - 1).exec()
-  .then(notes => {
-    if (!notes) {
-      return response.status(404).json({ error })
-    }
-    return Note.findOneAndUpdate(
-      { _id: notes[0]._id },
-      { content },
-      { new: true, runValidators: true, context: 'query' }
-    );
-  })
-  .then(updatedNote => {
-    if (!updatedNote) {
-      return response.status(500).json({ error });
-    }
-    response.status(201).json(updatedNote);
-  })
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+      if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token invalid' })
+      }
+      return User.findById(decodedToken.id)
+      .then(user =>{
+        Note.find({}).skip((parseInt(request.params.id)) - 1).exec()
+          .then(notes => {
+            if(!notes[0].user.equals(user._id))
+              return (response.status(500).json("wrong user"))
+            if (!notes) {
+              return response.status(404).json({ error })
+            }
+            return Note.findOneAndUpdate(
+              { _id: notes[0]._id },
+              { content },
+              { new: true, runValidators: true, context: 'query' }
+            );
+          })
+          .then(updatedNote => {
+            if (!updatedNote) {
+              return response.status(500).json("updatedNote:" + updatedNote);
+            }
+            response.status(201).json(updatedNote);
+          })
+        })
   .catch (error => response.status(404).json({ error }));
 })
 
@@ -183,15 +211,18 @@ app.get('/users', async (request, response) => {
 //Add a new user
 app.post('/users', async (request, response) => {
   const { name, email, username, password } = request.body
-
+  console.log(name)
+  console.log(email)
+  console.log(username)
+  console.log(password)
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
 
   const user = new User({
-    name,
-    email,
-    username,
-    passwordHash,
+    name: name,
+    email: email,
+    username: username,
+    passwordHash: passwordHash,
   })
 
   const savedUser = await user.save()
@@ -222,7 +253,7 @@ app.post('/login', async (request, response) => {
     id: user._id,
   }
 
-  const token = jwt.sign(userForToken, process.env.SECRET)
+  const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60*60 })
 
   response
     .status(200)
