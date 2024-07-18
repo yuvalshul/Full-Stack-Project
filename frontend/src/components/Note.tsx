@@ -9,8 +9,8 @@ export type note = {
     }
     content: string;
     theme: string;
-    onSave: (id: number, newContent: string) => void; //Saving content function
-    onDelete: (id: number) => void; //Deleting note function
+    onSave: (noteNum: number, newContent: string) => void; //Saving content function
+    onDelete: (noteNum: number) => void; //Deleting note function
   }
 
   const Note: React.FC<note> = ({noteNum: noteNum, title, author, content, theme, onSave, onDelete}) => {

@@ -2795,18 +2795,27 @@
   Body:    {}
   -----------
   
+<<<<<<< HEAD
   Time:    2024-07-16T13:19:35.921Z
+=======
+  Time:    2024-07-18T20:16:51.070Z
+>>>>>>> 125272a5 (return to hw2)
   Method:  GET
   Path:    /notes
   Body:    {}
   -----------
   
+<<<<<<< HEAD
   Time:    2024-07-16T13:19:36.103Z
+=======
+  Time:    2024-07-18T20:16:51.221Z
+>>>>>>> 125272a5 (return to hw2)
   Method:  GET
   Path:    /notes
   Body:    {}
   -----------
   
+<<<<<<< HEAD
   Time:    2024-07-16T13:19:42.905Z
   Method:  PUT
   Path:    /notes/2
@@ -2814,11 +2823,99 @@
   -----------
   
   Time:    2024-07-16T13:19:55.828Z
+=======
+  Time:    2024-07-18T20:16:51.348Z
   Method:  GET
   Path:    /notes
   Body:    {}
   -----------
   
+  Time:    2024-07-18T20:21:26.152Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-18T20:21:26.299Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-18T20:21:26.428Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-18T20:21:34.481Z
+  Method:  DELETE
+  Path:    /notes/2
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-18T20:21:34.638Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-18T20:21:43.390Z
+  Method:  POST
+  Path:    /notes
+  Body:    {"title":"sss","author":{"name":"ds","email":"dasd"},"content":"ss"}
+  -----------
+  
+  Time:    2024-07-18T20:21:43.546Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-18T20:21:44.406Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-18T20:21:53.652Z
+  Method:  PUT
+  Path:    /notes/54
+  Body:    {"content":"addsfdsfasssss"}
+  -----------
+  
+  Time:    2024-07-18T20:21:58.588Z
+  Method:  DELETE
+  Path:    /notes/55
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-18T20:21:58.730Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-18T20:22:06.465Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-18T20:22:11.996Z
+  Method:  PUT
+  Path:    /notes/24
+  Body:    {"content":"HTML is easy 2555"}
+  -----------
+  
+  Time:    2024-07-18T20:22:22.116Z
+>>>>>>> 125272a5 (return to hw2)
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+<<<<<<< HEAD
   Time:    2024-07-16T13:19:55.978Z
   Method:  GET
   Path:    /notes
@@ -8274,6 +8371,12 @@
   -----------
   
   Time:    2024-07-18T09:45:25.507Z
+<<<<<<< HEAD
+=======
+=======
+  Time:    2024-07-18T20:22:28.514Z
+>>>>>>> 125272a5 (return to hw2)
+>>>>>>> de4d05869141f0e7748220828baa6a2a284f8b26
   Method:  GET
   Path:    /notes
   Body:    {}
