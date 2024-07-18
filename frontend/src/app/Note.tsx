@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export type note = {
-<<<<<<< HEAD
     noteNum: number;
-=======
-  noteNum: number;
->>>>>>> b5df4d9ff1b1bf8530491eff9f4407131483b1cd
     title: string;
     author: {
       name: string;
@@ -17,11 +13,7 @@ export type note = {
     onDelete: (noteNum: number) => void; //Deleting note function
   }
 
-<<<<<<< HEAD
   const Note: React.FC<note> = ({noteNum, title, author, content, theme, onSave, onDelete}) => {
-=======
-  const Note: React.FC<note> = ({id: noteNum, title, author, content, theme, onSave, onDelete}) => {
->>>>>>> b5df4d9ff1b1bf8530491eff9f4407131483b1cd
     const [isEditing, setIsEditing] = useState(false);
     const [editContent, setEditContent] = useState(content);
   
