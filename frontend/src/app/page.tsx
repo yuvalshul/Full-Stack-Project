@@ -1,25 +1,17 @@
 "use client";
 import axios from 'axios';
 
-import '../css/globals.css';
-
 import { useEffect, useState } from 'react';
 
-import type { note } from '../components/Note';
-import Note from '../components/Note';
-import Pagination from '../components/pagination';
+import type { note } from './Note';
+import Note from './Note';
+import Pagination from './pagination';
 
 export default function Page () {
   const [notes, setNotes] = useState<note[]>([]);
   const [numOfPages, setNumOfPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [numOfNotes, setNumOfNotes] = useState<number>(1);
-  const [name, setName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [createUserName, setCreateUserName] = useState<string>('');
-  const [createPassword, setCreatePassword] = useState<string>('');
-  const [userName, setUserName] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
   const [newNoteTitle, setNewNoteTitle] = useState<string>('');
   const [newAuthorName, setNewAuthorName] = useState<string>('');
   const [newAuthorEmail, setNewAuthorEmail] = useState<string>('');
@@ -47,38 +39,13 @@ const handlePaginationClick = (i: number): void =>{
   setCurrentPage(i);
 };
 
-const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setName(event.target.value);
-};
-
-const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setEmail(event.target.value);
-};
-
-const handleCreateUserNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setCreateUserName(event.target.value);
-};
-
-const handleCreatePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setCreatePassword(event.target.value);
-};
-
-const handleUserNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setUserName(event.target.value);
-};
-
-const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setPassword(event.target.value);
-};
-
-
 const handleNoteSave = (idDB: number, newContent: string) => {
-  const id = (currentPage - 1) * 10 + notes.findIndex(note => note.id === idDB) + 1;
+  const id = (currentPage - 1) * 10 + notes.findIndex(note => note.noteNum === idDB) + 1;
   axios.put(`http://localhost:3001/notes/${id}`, {
     content: newContent
   })
   .then((response) => {
-    setNotes(notes.map(note => note.id === idDB ? { ...note, content: newContent } : note
+    setNotes(notes.map(note => note.noteNum === idDB ? { ...note, content: newContent } : note
     ));
   })
   .catch(error => {
@@ -88,7 +55,7 @@ const handleNoteSave = (idDB: number, newContent: string) => {
 
 
 const handleNoteDelete = (idDB: number) => {
-  const inedx = notes.findIndex(note => note.id === idDB);
+  const inedx = notes.findIndex(note => note.noteNum === idDB);
   const id = (currentPage - 1) * 10 + inedx + 1;
   axios.delete(`http://localhost:3001/notes/${id}`)
   .then((response) => {
@@ -164,36 +131,23 @@ const handleSaveClick = () => {
 };
 
 return (
+  /*<div>
+  <h1>page component</h1>
+  {notes.map((note) => (
+    <div key={note.id} style={{ color: theme }}>
+    <Note key={note.id} id={note.id} title={note.title} author={note.author} content={note.content} theme={theme} onSave={handleNoteSave} onDelete={handleNoteDelete}></Note>
+    </div>
+  ))}
+  </div>
+  */
   <div style={{ padding: '30px',minHeight: '100vh', margin: 0, backgroundColor: theme === 'white' ? 'black' : 'white'}}>
     <div style={{ display: 'flex', alignItems: 'center' }}>
     <h1 className="mainHeadline" style={{ marginBottom: '6px', color: theme }}>Notes</h1>
       <button name="change_theme" onClick={handleThemeChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Change theme to {theme}</button>
     </div>
-    <form name="create_user_form">
-    <h1 className="headline" style={{ color: theme }}>Create user</h1>
-    <input name="create_user_form_name" type="text" placeholder="Enter Name..." value={name} onChange={handleNameChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
-    <br />
-    <input name= "create_user_form_email" type="text" placeholder="Enter Email..." value={email} onChange={handleEmailChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
-    <br />
-    <input name="create_user_form_username" type="text" placeholder="Enter user name..." value={createUserName} onChange={handleCreateUserNameChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
-    <br />
-    <input name="create_user_form_password" type="text" placeholder="Enter password..." value={createPassword} onChange={handleCreatePasswordChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
-    <br />
-    <button name= "create_user_form_create_user" onClick={()=>{}} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Create User</button>
-    </form>
-    <br />
-    <form name="login_form">
-    <h1 className="headline" style={{ color: theme }}>Login</h1>
-    <input name="login_form_username" type="text" placeholder="Enter user name..." value={userName} onChange={handleUserNameChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
-    <br />
-    <input name="login_form_password" type="text" placeholder="Enter password..." value={password} onChange={handlePasswordChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
-    <br />
-    <button name="login_form_login" onClick={()=>{}} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Login</button>
-    <button name="logout" onClick={()=>{}} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Logout</button>
-    </form>
       {notes.map((note) => (
-        <div key={note.id} style={{ color: theme }}>
-        <Note key={note.id} id={note.id} title={note.title} author={note.author} content={note.content} theme={theme} onSave={handleNoteSave} onDelete={handleNoteDelete}></Note>
+        <div key={note.noteNum} style={{ color: theme }}>
+        <Note key={note.noteNum} noteNum={note.noteNum} title={note.title} author={note.author} content={note.content} theme={theme} onSave={handleNoteSave} onDelete={handleNoteDelete}></Note>
         </div>
       ))}
       <button name="add_new_note" onClick={handleAddNote} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Add Note</button>
@@ -210,8 +164,7 @@ return (
           <br />
           <button name="text_input_save_new_note" onClick={handleSaveClick} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Save</button>
           <button name="text_input_cancel_new_note" onClick={handleCancelClick} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Cancel</button>
-          </div>
-        
+        </div>
       )}
     <Pagination currentPage={currentPage} pageCount={numOfPages} handle={(i: number) => handlePaginationClick(i)}></Pagination>
   </div>

@@ -5,8 +5,7 @@ const app = express()
 const fs = require('fs')
 const path = require('path')
 const cors = require('cors')
-const bcrypt = require('bcrypt')
-const User = require('./models/user')
+
 const Note = require('./models/note')
 
 const logFilePath = path.join(__dirname, 'log.txt')
@@ -42,12 +41,6 @@ app.use(cors())
 
 app.use(requestLogger)
 
-
-
-
-
-//NOTES
-
 //GET all notes
 app.get('/notes', (req, response) => {
   const currentPage = parseInt(req.query._page) || 1;
@@ -56,7 +49,6 @@ app.get('/notes', (req, response) => {
   .then(notesRes => {
     Note.countDocuments()
         .then(count => {
-          console.log({ notesRes, count });
           response.status(200).json({ notesRes, count });
         })
         .catch (error => response.status(500).json({ error }));
@@ -79,10 +71,10 @@ app.get('/notes/:id', (request, response) => {
 
 // Function to generate new id based on the last document in the collection
 const generateId = () => {
-  return Note.findOne().sort({ id: -1 }).exec()
+  return Note.findOne().sort({ noteNum: -1 }).exec()
     .then(lastNote => {
       if (lastNote) {
-        return lastNote.id + 1;
+        return lastNote.noteNum + 1;
       } else {
         return 1; // If no notes exist yet, start from 1
       }
@@ -93,13 +85,13 @@ const generateId = () => {
 //POST
 app.post('/notes', (request, response) => {
   generateId()
-    .then(id => {
+    .then(noteNum => {
       const body = request.body
       if (!body.content) {
         return response.status(400).json({ error })
       }
       const note = new Note({
-        id: id,
+        noteNum: noteNum,
         title: body.title,
         author: {name: body.author.name, email: body.author.email} || { name: '', email: '' },
         content: body.content,
@@ -149,41 +141,6 @@ app.put('/notes/:id', (request, response) => {
   })
   .catch (error => response.status(404).json({ error }));
 })
-
-
-
-
-
-//USERS
-
-//Get all users
-app.get('/users', async (request, response) => {
-  const users = await User.find({})
-  response.json(users)
-})
-
-//Add a new user
-app.post('/users', async (request, response) => {
-  const { username, name, password } = request.body
-
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds)
-
-  const user = new User({
-    username,
-    name,
-    passwordHash,
-  })
-
-  const savedUser = await user.save()
-
-  response.status(201).json(savedUser)
-})
-
-
-
-
-
 
 app.use(unknownEndpoint)
 

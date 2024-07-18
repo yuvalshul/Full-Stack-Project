@@ -8,7 +8,7 @@ mongoose.set('strictQuery',false)
 mongoose.connect(url)
 
 const noteSchema = new mongoose.Schema({
-    id: Number,
+    noteNum: Number,
     title: String,
     author: {
     name: String,
@@ -19,7 +19,7 @@ const noteSchema = new mongoose.Schema({
 
 const Note = mongoose.model('Note', noteSchema)
 
-
+/*
 const deleteAllDocuments = async () => {
   try {
     const result = await Note.deleteMany({});
@@ -34,30 +34,30 @@ const deleteAllDocuments = async () => {
 deleteAllDocuments();
 
 
-/*
+
 Note.find({content: 'HTML is easy'}).then(result => {
   result.forEach(note => {
     console.log(note)
   })
   mongoose.connection.close()
 })
-  
+  */
 
 // Function to create and save a new note
-const createAndSaveNote = async (id) => {
+const createAndSaveNote = async (noteNum) => {
   const note = new Note({
-    id: id,
-    title: `Note ${id}`,
+    noteNum: noteNum,
+    title: `Note ${noteNum}`,
     author: {
-      name: `Author ${id}`,
-      email: `author${id}@example.com`
+      name: `Author ${noteNum}`,
+      email: `author${noteNum}@example.com`
     },
-    content: `HTML is easy ${id}`
+    content: `HTML is easy ${noteNum}`
   });
 
   try {
     const savedNote = await note.save();
-    console.log(`Note ${savedNote.id} saved!`);
+    console.log(`Note ${savedNote.noteNum} saved!`);
   } catch (error) {
     console.error('Error saving note:', error);
   }
@@ -72,4 +72,3 @@ const createNotes = async () => {
 };
 
 createNotes();
-*/
