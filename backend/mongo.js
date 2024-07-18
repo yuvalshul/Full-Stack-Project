@@ -8,7 +8,7 @@ mongoose.set('strictQuery',false)
 mongoose.connect(url)
 
 const noteSchema = new mongoose.Schema({
-    id: Number,
+    noteNum: Number,
     title: String,
     author: {
     name: String,
@@ -44,15 +44,15 @@ Note.find({content: 'HTML is easy'}).then(result => {
   
 
 // Function to create and save a new note
-const createAndSaveNote = async (id) => {
+const createAndSaveNote = async (noteNum) => {
   const note = new Note({
-    id: id,
-    title: `Note ${id}`,
+    noteNum: noteNum,
+    title: `Note ${noteNum}`,
     author: {
-      name: `Author ${id}`,
-      email: `author${id}@example.com`
+      name: `Author ${noteNum}`,
+      email: `author${noteNum}@example.com`
     },
-    content: `HTML is easy ${id}`
+    content: `HTML is easy ${noteNum}`
   });
 
   try {

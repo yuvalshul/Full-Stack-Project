@@ -26,7 +26,7 @@ export default function Page () {
   const [newNoteContent, setNewNoteContent] = useState<string>('');
   const [theme, setTheme] = useState<string>('black');
   const [isAdding, setIsAdding] = useState(false);
-  const [user, setUser] = useState<{ token: string } | null>(null);
+  const [user, setUser] = useState<{ token: string, username: string } | null>(null);
 
   useEffect(() => {
     const promise = axios.get(`http://localhost:3001/notes`, {
@@ -49,14 +49,14 @@ const handlePaginationClick = (i: number): void =>{
 };
 
 const handleNoteSave = (idDB: number, newContent: string) => {
-  const id = (currentPage - 1) * 10 + notes.findIndex(note => note.id === idDB) + 1;
+  const id = (currentPage - 1) * 10 + notes.findIndex(note => note.noteNum === idDB) + 1;
   if(user)
   axios.put(`http://localhost:3001/notes/${id}`, {
     content: newContent
   }, {headers: { Authorization: setToken(user.token) }})
   .then((response) => {
     console.log(".then frontend")
-    setNotes(notes.map(note => note.id === idDB ? { ...note, content: newContent } : note
+    setNotes(notes.map(note => note.noteNum === idDB ? { ...note, content: newContent } : note
     ));
   })
   .catch(error => {
@@ -69,7 +69,7 @@ const setToken = (newToken: string) => {
 }
 
 const handleNoteDelete = (idDB: number) => {
-  const inedx = notes.findIndex(note => note.id === idDB);
+  const inedx = notes.findIndex(note => note.noteNum === idDB);
   const id = (currentPage - 1) * 10 + inedx + 1;
   if(user)
     axios.delete(`http://localhost:3001/notes/${id}`, {headers: { Authorization: setToken(user.token) }})
@@ -136,10 +136,6 @@ const handleSaveClick = () => {
 const handleCreateUser = async (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault();
   try{
-    console.log(name)
-    console.log(email)
-    console.log(createUserName)
-    console.log(createPassword)
     axios.post(`http://localhost:3001/users`, {
     name: name,
     email: email,
@@ -150,6 +146,7 @@ const handleCreateUser = async (event: React.FormEvent<HTMLFormElement>) => {
   setCreateUserName('')
   setEmail('')
   setName('')
+  console.log("User was created")
 }
   catch(error) {
     console.error('could not create a new user', error);
@@ -208,12 +205,13 @@ return (
     </div>
     :
     <div>
+    <p>Hello {user.username}</p>
     <button name="logout" onClick={()=>{}} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Logout</button>
     </div>
     }
       {notes.map((note) => (
-        <div key={note.id} style={{ color: theme }}>
-        <Note key={note.id} id={note.id} title={note.title} author={note.author} content={note.content} theme={theme} onSave={handleNoteSave} onDelete={handleNoteDelete}></Note>
+        <div key={note.noteNum} style={{ color: theme }}>
+        <Note key={note.noteNum} noteNum={note.noteNum} title={note.title} author={note.author} content={note.content} theme={theme} onSave={handleNoteSave} onDelete={handleNoteDelete}></Note>
         </div>
       ))}
       
@@ -221,11 +219,11 @@ return (
       {isAdding && (
         <div>
         <br />
-          <input type="text" placeholder="Enter note title..." value={newNoteTitle} onChange={({ target }) => setNewNoteTitle(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+          <input name="note_title" type="text" placeholder="Enter note title..." value={newNoteTitle} onChange={({ target }) => setNewNoteTitle(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
           <br />
-          <input type="text" placeholder="Enter author name..." value={newAuthorName} onChange={({ target }) => setNewAuthorName(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+          <input name="author_name" type="text" placeholder="Enter author name..." value={newAuthorName} onChange={({ target }) => setNewAuthorName(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
           <br />
-          <input type="text" placeholder="Enter author email..." value={newAuthorEmail} onChange={({ target }) => setNewAuthorEmail(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+          <input name="author_email" type="text" placeholder="Enter author email..." value={newAuthorEmail} onChange={({ target }) => setNewAuthorEmail(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
           <br />
           <input name="text_input_new_note" type="text" placeholder="Enter note content..." value={newNoteContent} onChange={({ target }) => setNewNoteContent(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
           <br />
