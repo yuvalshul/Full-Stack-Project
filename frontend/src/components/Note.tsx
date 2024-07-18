@@ -9,11 +9,11 @@ export type note = {
     }
     content: string;
     theme: string;
-    onSave: (noteNum: number, newContent: string) => void; //Saving content function
-    onDelete: (noteNum: number) => void; //Deleting note function
+    onSave: (id: number, newContent: string) => void; //Saving content function
+    onDelete: (id: number) => void; //Deleting note function
   }
 
-  const Note: React.FC<note> = ({noteNum, title, author, content, theme, onSave, onDelete}) => {
+  const Note: React.FC<note> = ({noteNum: noteNum, title, author, content, theme, onSave, onDelete}) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editContent, setEditContent] = useState(content);
   
