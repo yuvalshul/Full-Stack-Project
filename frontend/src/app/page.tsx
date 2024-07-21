@@ -131,15 +131,6 @@ const handleSaveClick = () => {
 };
 
 return (
-  /*<div>
-  <h1>page component</h1>
-  {notes.map((note) => (
-    <div key={note.id} style={{ color: theme }}>
-    <Note key={note.id} id={note.id} title={note.title} author={note.author} content={note.content} theme={theme} onSave={handleNoteSave} onDelete={handleNoteDelete}></Note>
-    </div>
-  ))}
-  </div>
-  */
   <div style={{ padding: '30px',minHeight: '100vh', margin: 0, backgroundColor: theme === 'white' ? 'black' : 'white'}}>
     <div style={{ display: 'flex', alignItems: 'center' }}>
     <h1 className="mainHeadline" style={{ marginBottom: '6px', color: theme }}>Notes</h1>
@@ -147,7 +138,8 @@ return (
     </div>
       {notes.map((note) => (
         <div key={note.id} style={{ color: theme }}>
-        <Note key={note.id} id={note.id} title={note.title} author={note.author} content={note.content} theme={theme} onSave={handleNoteSave} onDelete={handleNoteDelete}></Note>
+          <h1>{note.id}</h1>
+        <Note key={note.id} noteObj={note} theme={theme} onSave={handleNoteSave} onDelete={handleNoteDelete}></Note>
         </div>
       ))}
       <button name="add_new_note" onClick={handleAddNote} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Add Note</button>
