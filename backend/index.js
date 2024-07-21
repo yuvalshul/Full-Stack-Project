@@ -5,10 +5,8 @@ const app = express()
 const fs = require('fs')
 const path = require('path')
 const cors = require('cors')
-const bcrypt = require('bcrypt')
-const User = require('./models/user')
+
 const Note = require('./models/note')
-const jwt = require('jsonwebtoken')
 
 const logFilePath = path.join(__dirname, 'log.txt')
 
@@ -43,12 +41,6 @@ app.use(cors())
 
 app.use(requestLogger)
 
-
-
-
-
-//NOTES
-
 //GET all notes
 app.get('/notes', (req, response) => {
   const currentPage = parseInt(req.query._page) || 1;
@@ -57,7 +49,14 @@ app.get('/notes', (req, response) => {
   .then(notesRes => {
     Note.countDocuments()
         .then(count => {
-          response.status(200).json({ notesRes, count });
+          response.status(200).json({ notesRes: notesRes.map(note => {
+            return {
+              id: note.id,
+              title: note.title,
+              content: note.content,
+              author: note.author,
+            };
+          }), count });
         })
         .catch (error => response.status(500).json({ error }));
     })
@@ -90,74 +89,37 @@ const generateId = () => {
     .catch (error => response.status(500).json({ error }));
 };
 
-//Get a token
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '')
-  }
-  return null
-}
-
-
 //POST
 app.post('/notes', (request, response) => {
-  const body = request.body;
-  if (!body.content) {
-    return response.status(400).json({ error: 'Content missing' });
-  }
   generateId()
     .then(id => {
-      const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-      if (!decodedToken.id) {
-        return response.status(401).json({ error: 'token invalid' })
+      const body = request.body
+      if (!body.content) {
+        return response.status(400).json({ error })
       }
-      return User.findById(decodedToken.id)
-        .then(user => {
-          if (!user) {
-            throw new Error('User not found');
-          }
-          const note = new Note({
-            id: id,
-            title: body.title,
-            author: {
-              name: body.author ? body.author.name : '',
-              email: body.author ? body.author.email : ''
-            },
-            content: body.content,
-            user: user._id
-          });
-          return note.save()
-            .then(savedNote => {
-              user.notes = user.notes.concat(savedNote._id);
-              return user.save()
-                .then(() => savedNote); // Ensure savedNote is returned
-            });
-        });
+      const note = new Note({
+        id: id,
+        title: body.title,
+        author: {name: body.author.name, email: body.author.email} || { name: '', email: '' },
+        content: body.content,
+      })
+      return note.save();
     })
-    .then(savedNote => {
-      response.status(201).json(savedNote);
-    })
+      .then(savedNote => {
+        response.status(200).json(savedNote)
+      })
       .catch (error => response.status(500).json({ error }));
-});
+})
 
 //DELETE note by id
 app.delete('/notes/:id', (request, response) => {
-  //console.log("request:" , request)
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-      if (!decodedToken.id) {
-        return response.status(401).json({ error: 'token invalid' })
-      }
-      return User.findById(decodedToken.id)
-      .then(user => {
-          Note.find({}).skip((parseInt(request.params.id)) - 1).exec()
-          .then(notes => {
-            if (!notes || !notes[0].user.equals(user._id)) {
-              return (response.status(500).json({ error}))
-            }
-            return Note.findByIdAndDelete(notes[0]._id);
-          })
-        })
+  Note.find({}).skip((parseInt(request.params.id)) - 1).exec()
+  .then(notes => {
+    if (!notes) {
+      return (response.status(500).json({ error }))
+    }
+    return Note.findByIdAndDelete(notes[0]._id);
+  })
   .then(() => {
     response.status(204).end();
   })
@@ -167,101 +129,25 @@ app.delete('/notes/:id', (request, response) => {
 //PUT (upadte)
 app.put('/notes/:id', (request, response) => {
   const { content } = request.body;
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-      if (!decodedToken.id) {
-        return response.status(401).json({ error: 'token invalid' })
-      }
-      return User.findById(decodedToken.id)
-      .then(user =>{
-        Note.find({}).skip((parseInt(request.params.id)) - 1).exec()
-          .then(notes => {
-            if(!notes[0].user.equals(user._id))
-              return (response.status(500).json("wrong user"))
-            if (!notes) {
-              return response.status(404).json({ error })
-            }
-            return Note.findOneAndUpdate(
-              { _id: notes[0]._id },
-              { content },
-              { new: true, runValidators: true, context: 'query' }
-            );
-          })
-          .then(updatedNote => {
-            if (!updatedNote) {
-              return response.status(500).json("updatedNote:" + updatedNote);
-            }
-            response.status(201).json(updatedNote);
-          })
-        })
+  Note.find({}).skip((parseInt(request.params.id)) - 1).exec()
+  .then(notes => {
+    if (!notes) {
+      return response.status(404).json({ error })
+    }
+    return Note.findOneAndUpdate(
+      { _id: notes[0]._id },
+      { content },
+      { new: true, runValidators: true, context: 'query' }
+    );
+  })
+  .then(updatedNote => {
+    if (!updatedNote) {
+      return response.status(500).json({ error });
+    }
+    response.status(201).json(updatedNote);
+  })
   .catch (error => response.status(404).json({ error }));
 })
-
-
-
-
-
-//USERS
-
-//Get all users
-app.get('/users', async (request, response) => {
-  const users = await User.find({})
-  response.json(users)
-})
-
-//Add a new user
-app.post('/users', async (request, response) => {
-  const { name, email, username, password } = request.body
-  console.log(name)
-  console.log(email)
-  console.log(username)
-  console.log(password)
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password, saltRounds)
-
-  const user = new User({
-    name: name,
-    email: email,
-    username: username,
-    passwordHash: passwordHash,
-  })
-
-  const savedUser = await user.save()
-
-  response.status(201).json(savedUser)
-})
-
-
-
-
-//LOGIN
-app.post('/login', async (request, response) => {
-  const { username, password } = request.body
-
-  const user = await User.findOne({ username })
-  const passwordCorrect = user === null
-    ? false
-    : await bcrypt.compare(password, user.passwordHash)
-
-  if (!(user && passwordCorrect)) {
-    return response.status(401).json({
-      error: 'invalid username or password'
-    })
-  }
-
-  const userForToken = {
-    username: user.username,
-    id: user._id,
-  }
-
-  const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60*60 })
-
-  response
-    .status(200)
-    .send({ token, username: user.username, name: user.name })
-})
-
-
-
 
 app.use(unknownEndpoint)
 

@@ -14,17 +14,13 @@ mongoose.connect(url)
   })
 
   const noteSchema = new mongoose.Schema({
-    noteNum: Number,
+    id: Number,
     title: String,
     author: {
     name: String,
     email: String,
     },
     content: String,
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
    })
 
 noteSchema.set('toJSON', {
