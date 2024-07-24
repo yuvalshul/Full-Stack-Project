@@ -155,7 +155,6 @@ const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
       username, password,
     });
     const user = response.data;
-    //setToken(user.token)
     setUser(user)
     setUsername('')
     setPassword('')
@@ -216,23 +215,24 @@ return (
     }
       {notes.map((note) => (
         <div key={note.id} style={{ color: theme }}>
-        <Note key={note.id} id={note.id} title={note.title} author={note.author} content={note.content} theme={theme} onSave={handleNoteSave} onDelete={handleNoteDelete}></Note>
+        <Note key={note.id} id={note.id} title={note.title} author={note.author} content={note.content} theme={theme} onSave={handleNoteSave} onDelete={handleNoteDelete} user={user ? user.name : ''}></Note>
         </div>
       ))}
-      
-      <button name="add_new_note" onClick={handleAddNote} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Add Note</button>
-      {isAdding && (
-        <div>
-        <br />
-          <input type="text" placeholder="Enter note title..." value={newNoteTitle} onChange={({ target }) => setNewNoteTitle(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+      {user && (
+      <div>
+        <button name="add_new_note" onClick={handleAddNote} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Add Note</button>
+        {isAdding && (
+          <div>
           <br />
-          <input name="text_input_new_note" type="text" placeholder="Enter note content..." value={newNoteContent} onChange={({ target }) => setNewNoteContent(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
-          <br />
-          <button name="text_input_save_new_note" onClick={handleSaveClick} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Save</button>
-          <button name="text_input_cancel_new_note" onClick={handleCancelClick} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Cancel</button>
-          </div>
-        
-      )}
+            <input type="text" placeholder="Enter note title..." value={newNoteTitle} onChange={({ target }) => setNewNoteTitle(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+            <br />
+            <input name="text_input_new_note" type="text" placeholder="Enter note content..." value={newNoteContent} onChange={({ target }) => setNewNoteContent(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+            <br />
+            <button name="text_input_save_new_note" onClick={handleSaveClick} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Save</button>
+            <button name="text_input_cancel_new_note" onClick={handleCancelClick} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Cancel</button>
+            </div>
+        )}
+      </div>)}
     <Pagination currentPage={currentPage} pageCount={numOfPages} handle={(i: number) => handlePaginationClick(i)}></Pagination>
   </div>
 );}

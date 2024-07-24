@@ -11,9 +11,10 @@ export type note = {
     theme: string;
     onSave: (id: number, newContent: string) => void; //Saving content function
     onDelete: (id: number) => void; //Deleting note function
+    user: String;
   }
 
-  const Note: React.FC<note> = ({id, title, author, content, theme, onSave, onDelete}) => {
+  const Note: React.FC<note> = ({id, title, author, content, theme, onSave, onDelete, user}) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editContent, setEditContent] = useState(content);
   
@@ -44,8 +45,12 @@ export type note = {
       <div className="note" id={id.toString()} key={id} style={{ marginBottom: '20px' }}>
           <span className="bullet">&#8226;</span>
           <span className="headline" style={{ color: theme }}>{title}</span>
+          {author.name === user ?
+          <div>
           <button name={`delete-${id}`} onClick={handleDeleteClick} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Delete</button>
           <button name={`edit-${id}`} onClick={handleEditClick} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Edit</button>
+          </div>
+          :<div></div>}
           <p><strong>Author:</strong> {author.name} ({author.email})</p>
           {isEditing ? (
             <div>
