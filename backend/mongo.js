@@ -20,6 +20,7 @@ const noteSchema = new mongoose.Schema({
 const Note = mongoose.model('Note', noteSchema)
 
 
+/*
 const deleteAllDocuments = async () => {
   try {
     const result = await Note.deleteMany({});
@@ -32,16 +33,10 @@ const deleteAllDocuments = async () => {
 };
 
 deleteAllDocuments();
+*/
 
 
-/*
-Note.find({content: 'HTML is easy'}).then(result => {
-  result.forEach(note => {
-    console.log(note)
-  })
-  mongoose.connection.close()
-})
-  
+
 
 // Function to create and save a new note
 const createAndSaveNote = async (id) => {
@@ -49,8 +44,8 @@ const createAndSaveNote = async (id) => {
     id: id,
     title: `Note ${id}`,
     author: {
-      name: `Author ${id}`,
-      email: `author${id}@example.com`
+      name: `Yuval`,
+      email: 'yuval2@gmail.com'
     },
     content: `HTML is easy ${id}`
   });
@@ -63,13 +58,12 @@ const createAndSaveNote = async (id) => {
   }
 };
 
-// Loop to create and save notes with indices from 1 to 20
+// Loop to create and save notes with given indices
 const createNotes = async () => {
-  for (let i = 1; i <= 54; i++) {
+  for (let i = 25; i <= 55; i++) {
     await createAndSaveNote(i);
   }
   mongoose.connection.close();
 };
 
 createNotes();
-*/

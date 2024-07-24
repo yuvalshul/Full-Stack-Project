@@ -23,6 +23,7 @@ export type note = {
   
     const handleSaveClick = () => {
       onSave(id, editContent);
+      setEditContent(content);
       setIsEditing(false);
     };
   

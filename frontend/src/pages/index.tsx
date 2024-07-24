@@ -21,12 +21,10 @@ export default function Page () {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [newNoteTitle, setNewNoteTitle] = useState<string>('');
-  const [newAuthorName, setNewAuthorName] = useState<string>('');
-  const [newAuthorEmail, setNewAuthorEmail] = useState<string>('');
   const [newNoteContent, setNewNoteContent] = useState<string>('');
   const [theme, setTheme] = useState<string>('black');
   const [isAdding, setIsAdding] = useState(false);
-  const [user, setUser] = useState<{ token: string } | null>(null);
+  const [user, setUser] = useState<{ token: string , name: String, email: String} | null>(null);
 
   useEffect(() => {
     const promise = axios.get(`http://localhost:3001/notes`, {
@@ -55,7 +53,6 @@ const handleNoteSave = (idDB: number, newContent: string) => {
     content: newContent
   }, {headers: { Authorization: setToken(user.token) }})
   .then((response) => {
-    console.log(".then frontend")
     setNotes(notes.map(note => note.id === idDB ? { ...note, content: newContent } : note
     ));
   })
@@ -74,7 +71,6 @@ const handleNoteDelete = (idDB: number) => {
   if(user)
     axios.delete(`http://localhost:3001/notes/${id}`, {headers: { Authorization: setToken(user.token) }})
   .then((response) => {
-    console.log("delete frontend .then")
     // Remove the note from the notes state if successful
     setNotes(notes => {
       const updatedNotes = [...notes];
@@ -101,8 +97,6 @@ const handleAddNote = () => {
 
 const handleCancelClick = () => {
   setNewNoteTitle('');
-  setNewAuthorName('');
-  setNewAuthorEmail('');
   setNewNoteContent('');
   setIsAdding(false);
 };
@@ -112,16 +106,14 @@ const handleSaveClick = () => {
     axios.post(`http://localhost:3001/notes`, {
       title: newNoteTitle,
       author: {
-        name: newAuthorName,
-        email: newAuthorEmail
+        name: '',
+        email: ''
       },
       content: newNoteContent
     }, {headers: { Authorization: setToken(user.token) }})
       .then((response) => {
         setNotes([...notes, response.data]);
         setNewNoteTitle('');
-        setNewAuthorName('');
-        setNewAuthorEmail('');
         setNewNoteContent('');
         setIsAdding(false);
         setNumOfNotes(numOfNotes + 1);
@@ -159,9 +151,10 @@ const handleCreateUser = async (event: React.FormEvent<HTMLFormElement>) => {
 const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault()
   try {
-    const user = await loginService.login({
+    const response = await axios.post('http://localhost:3001/login', {
       username, password,
-    })
+    });
+    const user = response.data;
     //setToken(user.token)
     setUser(user)
     setUsername('')
@@ -174,13 +167,23 @@ const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
   }
 }
 
+const handleLogout = () => {
+  setUser(null);
+};
+
 
 return (
   <div style={{ padding: '30px',minHeight: '100vh', margin: 0, backgroundColor: theme === 'white' ? 'black' : 'white'}}>
     <div style={{ display: 'flex', alignItems: 'center' }}>
     <h1 className="mainHeadline" style={{ marginBottom: '6px', color: theme }}>Notes</h1>
+    <br />
       <button name="change_theme" onClick={handleThemeChange} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Change theme to {theme}</button>
     </div>
+    {user ?(
+    <div>
+    <h1>Hi {user.name}</h1>
+    </div>
+    ) : ""}
     <br />
     {user === null ?
     <div>
@@ -208,7 +211,7 @@ return (
     </div>
     :
     <div>
-    <button name="logout" onClick={()=>{}} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Logout</button>
+    <button name="logout" onClick={handleLogout} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}>Logout</button>
     </div>
     }
       {notes.map((note) => (
@@ -222,10 +225,6 @@ return (
         <div>
         <br />
           <input type="text" placeholder="Enter note title..." value={newNoteTitle} onChange={({ target }) => setNewNoteTitle(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
-          <br />
-          <input type="text" placeholder="Enter author name..." value={newAuthorName} onChange={({ target }) => setNewAuthorName(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
-          <br />
-          <input type="text" placeholder="Enter author email..." value={newAuthorEmail} onChange={({ target }) => setNewAuthorEmail(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
           <br />
           <input name="text_input_new_note" type="text" placeholder="Enter note content..." value={newNoteContent} onChange={({ target }) => setNewNoteContent(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
           <br />
