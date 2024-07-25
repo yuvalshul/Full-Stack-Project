@@ -29,18 +29,16 @@ export default function Page ({ preNotes, preNumOfPages, preNumOfNotes }: InferG
   const [theme, setTheme] = useState<string>('black');
   const [isAdding, setIsAdding] = useState(false);
   const [user, setUser] = useState<{ token: string , name: String, email: String} | null>(null);
-  console.log("current page = " + currentPage + "\ncache[0]: " + cache[0].title + "\ncurr[last]: " + cache[cache.length - 1].title)
+  // console.log("current page = " + currentPage + "\ncache[0]: " + cache[0].title + "\ncurr[last]: " + cache[cache.length - 1].title)
 
   useEffect(() => {
     if((prevPage >= numOfPages - 2 && currentPage >= numOfPages -2) || (prevPage <= 3 && currentPage <= 3)){
-      console.log("use effect 3 last or 3 first")
       let startIndex = (currentPage - 1) * 10;
       let endIndex = Math.min(startIndex + 10, numOfNotes);
       const currentNotes = cache.filter(note => note.id > startIndex && note.id <= endIndex);
       setNotes(currentNotes);
     }
     else if (prevPage < currentPage){ //increasing page
-      console.log("+++++++++++++++++++")
       let startPage = 0;
       if(numOfPages >= currentPage + 2)
         startPage = currentPage - 2;
@@ -74,7 +72,6 @@ export default function Page ({ preNotes, preNumOfPages, preNumOfNotes }: InferG
       fetchNotes();
     }
     else{     //decreasing page
-      console.log("--------------------------");
       let startPage = 1;
       if (currentPage != 1){
         if(1 >= currentPage - 2 && currentPage - 2 >= 1)
@@ -82,7 +79,6 @@ export default function Page ({ preNotes, preNumOfPages, preNumOfNotes }: InferG
         else
           startPage = currentPage - 1;
       }
-      console.log(startPage)
       const fetchNotes = async () => {
         try {
           const requests = [];
@@ -115,10 +111,14 @@ export default function Page ({ preNotes, preNumOfPages, preNumOfNotes }: InferG
   useEffect(() => {
     const startIndex = (currentPage - 1) * 10;
     const endIndex = startIndex + 10;
-    console.log("start index = " + startIndex)
-    console.log("end index = " + endIndex)
+    // console.log("start index = " + startIndex)
+    // console.log("end index = " + endIndex)
     const currentNotes = cache.filter(note => note.id > startIndex && note.id <= endIndex);
-    setNotes(currentNotes); 
+    setNotes(currentNotes);
+    // console.log("currentNotes[currentNotes.length - 1].title: " + currentNotes[currentNotes.length - 1].title + "\ncurrentNotes[currentNotes.length - 1].id: " + currentNotes[currentNotes.length - 1].id)
+    // console.log("----------------------------------")
+    // console.log("cache[cache.length - 1].title: " + cache[cache.length - 1].title)
+    // console.log("cache[cache.length - 1].id: " + cache[cache.length - 1].id)
   }, [cache]);
 
 const handlePaginationClick = (i: number): void =>{
@@ -151,15 +151,18 @@ const handleNoteDelete = (idDB: number) => {
   if(user)
     axios.delete(`http://localhost:3001/notes/${id}`, {headers: { Authorization: setToken(user.token) }})
   .then((response) => {
+    setNumOfNotes(numOfNotes - 1);
+    if(numOfNotes - 1 == (numOfPages - 1)* 10)
+        setNumOfPages(numOfPages - 1)
     // Remove the note from the notes state if successful
-    setNotes(notes => {
-      const updatedNotes = [...notes];
-      updatedNotes.splice(inedx, 1); // Remove the note at index id - 1
-      setNumOfNotes(numOfNotes - 1);
-      if(updatedNotes.length == 0)
-        setCurrentPage(currentPage - 1);
-      return updatedNotes;
-    });
+    // setNotes(notes => {
+    //   const updatedNotes = [...notes];
+    //   updatedNotes.splice(inedx, 1); // Remove the note at index id - 1
+    //   setNumOfNotes(numOfNotes - 1);
+    //   if(updatedNotes.length == 0)
+    //     setCurrentPage(currentPage - 1);
+    //   return updatedNotes;
+    // });
   })
   .catch(error => {
     console.error('Error deleting note:', error);
@@ -192,11 +195,15 @@ const handleSaveClick = () => {
       content: newNoteContent
     }, {headers: { Authorization: setToken(user.token) }})
       .then((response) => {
-        setNotes([...notes, response.data]);
+        // setNotes([...notes, response.data]);
+        // console.log("response.data: " + response.data)
+        // setCache([...cache, response.data]);
         setNewNoteTitle('');
         setNewNoteContent('');
         setIsAdding(false);
         setNumOfNotes(numOfNotes + 1);
+        if(numOfNotes + 1 > numOfPages * 10)
+          setNumOfPages(numOfPages + 1)
       })
       .catch(error => {
         console.error('Error adding note:', error);
@@ -304,7 +311,7 @@ return (
         {isAdding && (
           <div>
           <br />
-            <input type="text" placeholder="Enter note title..." value={newNoteTitle} onChange={({ target }) => setNewNoteTitle(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
+            <input name="text_input_new_note_title" type="text" placeholder="Enter note title..." value={newNoteTitle} onChange={({ target }) => setNewNoteTitle(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
             <br />
             <input name="text_input_new_note" type="text" placeholder="Enter note content..." value={newNoteContent} onChange={({ target }) => setNewNoteContent(target.value)} style={{backgroundColor: 'LightGrey', borderColor: theme, color: 'black'}}/>
             <br />

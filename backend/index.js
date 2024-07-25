@@ -55,7 +55,6 @@ app.get('/notes', (req, response) => {
   const perPage = parseInt(req.query._per_page) || 10;
   Note.find({}).skip((currentPage - 1) * perPage).limit(perPage)
   .then(notesRes => {
-    console.log(".then, current page = " + currentPage)
     Note.countDocuments()
         .then(count => {
           response.status(200).json({ notesRes: notesRes.map(note => {
@@ -111,20 +110,25 @@ const getTokenFrom = request => {
 //POST
 app.post('/notes', (request, response) => {
   const body = request.body;
+  
   if (!body.content) {
     return response.status(400).json({ error: 'Content missing' });
   }
+
   generateId()
     .then(id => {
-      const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+      const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+      
       if (!decodedToken.id) {
-        return response.status(401).json({ error: 'token invalid' })
+        return response.status(401).json({ error: 'Token invalid' });
       }
+
       return User.findById(decodedToken.id)
         .then(user => {
           if (!user) {
             throw new Error('User not found');
           }
+
           const note = new Note({
             id: id,
             title: body.title,
@@ -134,18 +138,28 @@ app.post('/notes', (request, response) => {
             },
             content: body.content,
           });
+
           return note.save()
             .then(savedNote => {
+              // Optional: Save the user if needed
               return user.save()
                 .then(() => savedNote); // Ensure savedNote is returned
             });
         });
     })
     .then(savedNote => {
-      response.status(201).json(savedNote);
+      // Return only specific fields
+      const responseNote = {
+        id: savedNote.id,
+        title: savedNote.title,
+        content: savedNote.content,
+        author: savedNote.author
+      };
+      response.status(201).json(responseNote);
     })
-      .catch (error => response.status(500).json({ error }));
+    .catch(error => response.status(500).json({ error: error.message }));
 });
+
 
 //DELETE note by id
 app.delete('/notes/:id', (request, response) => {

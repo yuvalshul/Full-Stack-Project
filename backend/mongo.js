@@ -20,7 +20,7 @@ const noteSchema = new mongoose.Schema({
 const Note = mongoose.model('Note', noteSchema)
 
 
-/*
+
 const deleteAllDocuments = async () => {
   try {
     const result = await Note.deleteMany({});
@@ -33,11 +33,11 @@ const deleteAllDocuments = async () => {
 };
 
 deleteAllDocuments();
-*/
 
 
 
 
+/*
 // Function to create and save a new note
 const createAndSaveNote = async (id) => {
   const note = new Note({
@@ -67,3 +67,4 @@ const createNotes = async () => {
 };
 
 createNotes();
+*/
