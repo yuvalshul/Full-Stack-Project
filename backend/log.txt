@@ -31121,3 +31121,99 @@
   Body:    {"username":"testuser","password":"password123"}
   -----------
   
+  Time:    2024-07-25T20:56:26.331Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-25T20:56:27.755Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-25T20:56:28.698Z
+  Method:  POST
+  Path:    /users
+  Body:    {"name":"a user created by playwright3","email":"playwright email3","username":"playwright username3","password":"playwright1234"}
+  -----------
+  
+  Time:    2024-07-25T20:56:29.126Z
+  Method:  POST
+  Path:    /login
+  Body:    {"username":"playwright username3","password":"playwright1234"}
+  -----------
+  
+  Time:    2024-07-25T20:56:29.856Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-25T20:56:31.835Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-25T20:56:32.322Z
+  Method:  POST
+  Path:    /users
+  Body:    {"name":"a user created by playwright2","email":"playwright email2","username":"playwright username2","password":"playwright1234"}
+  -----------
+  
+  Time:    2024-07-25T20:56:32.569Z
+  Method:  POST
+  Path:    /login
+  Body:    {"username":"playwright username2","password":"playwright1234"}
+  -----------
+  
+  Time:    2024-07-25T20:56:32.903Z
+  Method:  POST
+  Path:    /notes
+  Body:    {"title":"a note created by playwright2","author":{"name":"","email":""},"content":"note content2"}
+  -----------
+  
+  Time:    2024-07-25T20:56:32.927Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-25T20:56:33.738Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-25T20:56:34.542Z
+  Method:  POST
+  Path:    /users
+  Body:    {"name":"a user created by playwright1","email":"playwright email1","username":"playwright username1","password":"playwright1234"}
+  -----------
+  
+  Time:    2024-07-25T20:56:34.636Z
+  Method:  POST
+  Path:    /login
+  Body:    {"username":"playwright username1","password":"playwright1234"}
+  -----------
+  
+  Time:    2024-07-25T20:56:35.144Z
+  Method:  GET
+  Path:    /notes
+  Body:    {}
+  -----------
+  
+  Time:    2024-07-25T20:56:35.961Z
+  Method:  POST
+  Path:    /users
+  Body:    {"name":"Test User","email":"testuser@example.com","username":"testuser","password":"password123"}
+  -----------
+  
+  Time:    2024-07-25T20:56:37.048Z
+  Method:  POST
+  Path:    /login
+  Body:    {"username":"testuser","password":"password123"}
+  -----------
+  
