@@ -44,8 +44,8 @@ const createAndSaveNote = async (id) => {
     id: id,
     title: `Note ${id}`,
     author: {
-      name: `Yuval`,
-      email: 'yuval2@gmail.com'
+      name: `Alina`,
+      email: 'alina@gmail.com'
     },
     content: `HTML is easy ${id}`
   });
@@ -60,7 +60,7 @@ const createAndSaveNote = async (id) => {
 
 // Loop to create and save notes with given indices
 const createNotes = async () => {
-  for (let i = 25; i <= 55; i++) {
+  for (let i = 56; i <= 65; i++) {
     await createAndSaveNote(i);
   }
   mongoose.connection.close();

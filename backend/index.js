@@ -55,6 +55,7 @@ app.get('/notes', (req, response) => {
   const perPage = parseInt(req.query._per_page) || 10;
   Note.find({}).skip((currentPage - 1) * perPage).limit(perPage)
   .then(notesRes => {
+    console.log(".then, current page = " + currentPage)
     Note.countDocuments()
         .then(count => {
           response.status(200).json({ notesRes: notesRes.map(note => {

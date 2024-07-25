@@ -1,19 +1,23 @@
 "use client";
 import axios from 'axios';
-
 import '../css/globals.css';
-import loginService from '../services/login'
+// import loginService from '../services/login'
 import { useEffect, useState } from 'react';
-
 import type { note } from '../components/Note';
 import Note from '../components/Note';
 import Pagination from '../components/pagination';
+import type { InferGetStaticPropsType, GetStaticProps } from 'next'
 
-export default function Page () {
+export default function Page ({ preNotes, preNumOfPages, preNumOfNotes }: InferGetStaticPropsType<typeof getStaticProps>) {
+  // console.log("----------------------------------");
+  // console.log("component: " + preNotes);
+  // console.log("----------------------------------");
+  const [cache, setCache] = useState<note[]>(preNotes);
   const [notes, setNotes] = useState<note[]>([]);
-  const [numOfPages, setNumOfPages] = useState<number>(1);
+  const [numOfPages, setNumOfPages] = useState<number>(preNumOfPages);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [numOfNotes, setNumOfNotes] = useState<number>(1);
+  const [prevPage, setPrevPage] = useState<number>(1);
+  const [numOfNotes, setNumOfNotes] = useState<number>(preNumOfNotes);
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [createUserName, setCreateUserName] = useState<string>('');
@@ -25,24 +29,100 @@ export default function Page () {
   const [theme, setTheme] = useState<string>('black');
   const [isAdding, setIsAdding] = useState(false);
   const [user, setUser] = useState<{ token: string , name: String, email: String} | null>(null);
+  console.log("current page = " + currentPage + "\ncache[0]: " + cache[0].title + "\ncurr[last]: " + cache[cache.length - 1].title)
 
   useEffect(() => {
-    const promise = axios.get(`http://localhost:3001/notes`, {
-      params: {
-        _page: currentPage,
-        _per_page: 10,
-      },
-    })
-    promise
-      .then((response) => {
-        setNotes(response.data.notesRes);
-        setNumOfNotes(parseInt(response.data.count));
-        setNumOfPages (Math.ceil(numOfNotes / 10));
-      })
-      .catch(error => { console.error("Encountered an error:" + error)});;
-  }, [currentPage, numOfNotes]);
+    if((prevPage >= numOfPages - 2 && currentPage >= numOfPages -2) || (prevPage <= 3 && currentPage <= 3)){
+      console.log("use effect 3 last or 3 first")
+      let startIndex = (currentPage - 1) * 10;
+      let endIndex = Math.min(startIndex + 10, numOfNotes);
+      const currentNotes = cache.filter(note => note.id > startIndex && note.id <= endIndex);
+      setNotes(currentNotes);
+    }
+    else if (prevPage < currentPage){ //increasing page
+      console.log("+++++++++++++++++++")
+      let startPage = 0;
+      if(numOfPages >= currentPage + 2)
+        startPage = currentPage - 2;
+      else
+        startPage = 5 - (numOfPages - currentPage) - 1;
+      const fetchNotes = async () => {
+        try {
+          const requests = [];
+          // Loop to create multiple requests
+          for (let i = 0; i < 5; i++) {
+            requests.push(
+              axios.get(`http://localhost:3001/notes`, {
+                params: {
+                  _page: startPage + i,
+                  _per_page: 10,
+                },
+              })
+            );
+          }
+          // Wait for all requests to complete
+          const responses = await Promise.all(requests);
+          // Concatenate all fetched notes
+          const allNotes = responses.flatMap(response => response.data.notesRes);
+
+          setCache(allNotes);
+        } catch (error) {
+          console.error("Encountered an error:", error);
+        }
+      };
+  
+      fetchNotes();
+    }
+    else{     //decreasing page
+      console.log("--------------------------");
+      let startPage = 1;
+      if (currentPage != 1){
+        if(1 >= currentPage - 2 && currentPage - 2 >= 1)
+          startPage = currentPage - 2;
+        else
+          startPage = currentPage - 1;
+      }
+      console.log(startPage)
+      const fetchNotes = async () => {
+        try {
+          const requests = [];
+          // Loop to create multiple requests
+          for (let i = 0; i < 5; i++) {
+            requests.push(
+              axios.get(`http://localhost:3001/notes`, {
+                params: {
+                  _page: startPage + i,
+                  _per_page: 10,
+                },
+              })
+            );
+          }
+          // Wait for all requests to complete
+          const responses = await Promise.all(requests);
+          // Concatenate all fetched notes
+          const allNotes = responses.flatMap(response => response.data.notesRes);
+
+          setCache(allNotes);
+        } catch (error) {
+          console.error("Encountered an error:", error);
+        }
+      };
+
+      fetchNotes();
+    }
+  }, [currentPage]);
+
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * 10;
+    const endIndex = startIndex + 10;
+    console.log("start index = " + startIndex)
+    console.log("end index = " + endIndex)
+    const currentNotes = cache.filter(note => note.id > startIndex && note.id <= endIndex);
+    setNotes(currentNotes); 
+  }, [cache]);
 
 const handlePaginationClick = (i: number): void =>{
+  setPrevPage(currentPage);
   setCurrentPage(i);
 };
 
@@ -236,3 +316,23 @@ return (
     <Pagination currentPage={currentPage} pageCount={numOfPages} handle={(i: number) => handlePaginationClick(i)}></Pagination>
   </div>
 );}
+
+
+export const getStaticProps: GetStaticProps = (async (context) => {
+  const res = await axios.get(`http://localhost:3001/notes`, {
+    params: {
+      _page: 1,
+      _per_page: 50,
+    },});
+    const preNotes = await res.data.notesRes;
+    const preNumOfNotes = parseInt(res.data.count);
+    const preNumOfPages = Math.ceil(preNumOfNotes / 10);
+
+    return {
+      props: {
+        preNotes,
+        preNumOfPages,
+        preNumOfNotes,
+      },
+    };
+  });
